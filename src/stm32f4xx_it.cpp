@@ -1,10 +1,10 @@
 /**
   ******************************************************************************
-  * @file    stm32f4xx_it.c
-  * @author  Ac6
+  * @file    stm32f4xx_it.cpp
+  * @author  Marcin
   * @version V1.0
-  * @date    02-Feb-2015
-  * @brief   Default Interrupt Service Routines.
+  * @date    22.05.2019
+  * @brief   Interrupt Service Routines.
   ******************************************************************************
 */
 
