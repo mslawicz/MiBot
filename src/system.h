@@ -8,6 +8,9 @@
 #ifndef SYSTEM_H_
 #define SYSTEM_H_
 
+#include "uart.h"
+#include "console.h"
+
 class System
 {
 public:
@@ -16,9 +19,11 @@ public:
     void errorHandler(void) {};
     void config(void);
     void terminate(void);
+    Console* getConsole(void) const { return pConsole; }
 private:
     System();
     void configClock(void);
+    Console* pConsole;
 };
 
 #endif /* SYSTEM_H_ */

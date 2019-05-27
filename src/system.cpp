@@ -7,12 +7,14 @@
 
 #include "stm32f4xx_hal.h"
 #include "system.h"
+#include "timer.h"
 
 System::System()
 {
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
     HAL_Init();
 
+    /* MSP (MCU Support Package) initialization */
     __HAL_RCC_SYSCFG_CLK_ENABLE();
     __HAL_RCC_PWR_CLK_ENABLE();
 
@@ -84,7 +86,8 @@ void System::configClock(void)
  */
 void System::config(void)
 {
-    //pConsole = new UART(USART2, 115200);
+    Timer::config();
+    pConsole = new Console;
 }
 
 /*
@@ -92,5 +95,5 @@ void System::config(void)
  */
 void System::terminate(void)
 {
-    //delete pConsole;
+    delete pConsole;
 }
