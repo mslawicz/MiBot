@@ -15,6 +15,7 @@
 #include <cmsis_os.h>
 #endif
 #include "stm32f4xx_it.h"
+#include "uart.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -39,4 +40,20 @@ void SysTick_Handler(void)
 #ifdef USE_RTOS_SYSTICK
 	osSystickHandler();
 #endif
+}
+
+
+/******************************************************************************/
+/* STM32L1xx Peripheral Interrupt Handlers                                    */
+/* Add here the Interrupt Handlers for the used peripherals.                  */
+/* For the available peripheral interrupt handler names,                      */
+/* please refer to the startup file (startup_stm32l1xx.s).                    */
+/******************************************************************************/
+
+/**
+  * @brief This function handles USART2 global interrupt.
+  */
+void USART2_IRQHandler(void)
+{
+    HAL_UART_IRQHandler(UART::pUSART2);
 }
