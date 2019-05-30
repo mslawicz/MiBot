@@ -18,25 +18,25 @@ UART::UART(USART_TypeDef* instance, uint32_t baudRate) :
     {
         __HAL_RCC_USART1_CLK_ENABLE();
         //UART TX pin
-        GPIO(GPIOA, GPIO_PIN_9, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF7_USART1);
+        GPIO(GPIOA, GPIO_PIN_9, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW, GPIO_AF7_USART1);
         //UART RX pin
-        GPIO(GPIOA, GPIO_PIN_10, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF7_USART1);
+        GPIO(GPIOA, GPIO_PIN_10, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW, GPIO_AF7_USART1);
     }
     if(instance == USART2)
     {
         __HAL_RCC_USART2_CLK_ENABLE();
         //UART TX pin
-        GPIO(GPIOA, GPIO_PIN_2, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF7_USART2);
+        GPIO(GPIOA, GPIO_PIN_2, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW, GPIO_AF7_USART2);
         //UART RX pin
-        GPIO(GPIOA, GPIO_PIN_3, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF7_USART2);
+        GPIO(GPIOA, GPIO_PIN_3, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW, GPIO_AF7_USART2);
     }
     if(instance == USART6)
     {
         __HAL_RCC_USART6_CLK_ENABLE();
         //UART TX pin
-        GPIO(GPIOC, GPIO_PIN_6, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF8_USART6);
+        GPIO(GPIOC, GPIO_PIN_6, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW, GPIO_AF8_USART6);
         //UART RX pin
-        GPIO(GPIOC, GPIO_PIN_7, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF8_USART6);
+        GPIO(GPIOC, GPIO_PIN_7, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW, GPIO_AF8_USART6);
     }
 
     hUart.Instance = instance;
@@ -56,7 +56,7 @@ UART::UART(USART_TypeDef* instance, uint32_t baudRate) :
     {
         pUSART2 = &hUart;
         /* USART2 interrupt Init */
-        HAL_NVIC_SetPriority(USART2_IRQn, 1, 1);
+        HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
         HAL_NVIC_EnableIRQ(USART2_IRQn);
     }
     busy = false;
@@ -115,7 +115,8 @@ void UART::transmitHandler(void)
         stringToSend = transmitQueue.front();
         transmitQueue.pop();
         busy = true;
-        HAL_UART_Transmit_IT(&hUart, reinterpret_cast<uint8_t*>(&stringToSend[0]), stringToSend.length());
+        //HAL_UART_Transmit_IT(&hUart, reinterpret_cast<uint8_t*>(&stringToSend[0]), stringToSend.length());
+        HAL_UART_Transmit(&hUart, reinterpret_cast<uint8_t*>(&stringToSend[0]), stringToSend.length(), 10000); busy = false;
     }
 }
 
