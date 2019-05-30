@@ -115,8 +115,7 @@ void UART::transmitHandler(void)
         stringToSend = transmitQueue.front();
         transmitQueue.pop();
         busy = true;
-        //HAL_UART_Transmit_IT(&hUart, reinterpret_cast<uint8_t*>(&stringToSend[0]), stringToSend.length());
-        HAL_UART_Transmit(&hUart, reinterpret_cast<uint8_t*>(&stringToSend[0]), stringToSend.length(), 10000); busy = false;
+        HAL_UART_Transmit_IT(&hUart, reinterpret_cast<uint8_t*>(&stringToSend[0]), stringToSend.length());
     }
 }
 
