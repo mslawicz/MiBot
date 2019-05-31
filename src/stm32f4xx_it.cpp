@@ -16,6 +16,7 @@
 #endif
 #include "stm32f4xx_it.h"
 #include "uart.h"
+#include "i2c.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -108,6 +109,14 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles I2C1 event interrupt.
+  */
+void I2C1_EV_IRQHandler(void)
+{
+  HAL_I2C_EV_IRQHandler(I2cBus::pI2c1);
+}
 
 /**
   * @brief This function handles USART2 global interrupt.

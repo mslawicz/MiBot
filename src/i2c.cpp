@@ -8,6 +8,8 @@
 #include "i2c.h"
 #include "gpio.h"
 
+I2C_HandleTypeDef* I2cBus::pI2c1 = nullptr;
+
 I2cBus::I2cBus(I2C_TypeDef* instance)
 {
     if(instance == I2C1)
@@ -21,6 +23,7 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
         /* Peripheral interrupt init */
         HAL_NVIC_SetPriority(I2C1_EV_IRQn, 8, 0);
         HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
+        pI2c1 = &hI2c;
     }
     hI2c.Instance = instance;
     hI2c.Init.ClockSpeed = 400000;

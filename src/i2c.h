@@ -15,6 +15,7 @@ class I2cBus
 public:
     I2cBus(I2C_TypeDef* instance);
     ~I2cBus();
+    static I2C_HandleTypeDef* pI2c1;
 private:
     I2C_HandleTypeDef hI2c;
 };
