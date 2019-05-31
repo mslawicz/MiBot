@@ -14,6 +14,7 @@
 #include "system.h"
 #include "gpio.h"
 #include "timer.h"
+#include "i2c.h" //XXX
 
 int main(void)
 {
@@ -21,6 +22,7 @@ int main(void)
 
     GPIO pushbutton(USER_BUTTON_GPIO_PORT, USER_BUTTON_PIN, GPIO_MODE_INPUT, GPIO_PULLUP);
     GPIO led(LED2_GPIO_PORT, LED2_PIN, GPIO_MODE_OUTPUT_PP);
+    I2cBus i2cBusTest(I2C1); //XXX
 
     Timer ledTimer;
     // start reception of the first character
