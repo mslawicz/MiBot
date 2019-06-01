@@ -7,11 +7,13 @@
 
 #include "i2c.h"
 #include "gpio.h"
+#include "system.h"
 
 I2C_HandleTypeDef* I2cBus::pI2c1 = nullptr;
 
 I2cBus::I2cBus(I2C_TypeDef* instance)
 {
+    std::string name;
     if(instance == I2C1)
     {
         // SCL pin
@@ -24,6 +26,7 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
         HAL_NVIC_SetPriority(I2C1_EV_IRQn, 8, 0);
         HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
         pI2c1 = &hI2c;
+        name = "I2C1";
     }
     hI2c.Instance = instance;
     hI2c.Init.ClockSpeed = 400000;
@@ -34,11 +37,18 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
     hI2c.Init.OwnAddress2 = 0;
     hI2c.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
     hI2c.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-    if (HAL_I2C_Init(&hI2c) != HAL_OK)
+    if (HAL_I2C_Init(&hI2c) == HAL_OK)
     {
-      //ret = HAL_ERROR;
+        System::getInstance()->getConsole()->sendMessage(Severity::Info, name + " initialized");
     }
-    HAL_I2CEx_ConfigAnalogFilter(&hI2c, I2C_ANALOGFILTER_ENABLE);
+    else
+    {
+        System::getInstance()->getConsole()->sendMessage(Severity::Error, name + " initialization failed");
+    }
+    if(HAL_I2CEx_ConfigAnalogFilter(&hI2c, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+    {
+        System::getInstance()->getConsole()->sendMessage(Severity::Error, name + " filter configuration failed");
+    }
 }
 
 I2cBus::~I2cBus()
