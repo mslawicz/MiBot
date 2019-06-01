@@ -9,6 +9,7 @@
 #define I2C_H_
 
 #include "stm32f4xx_hal.h"
+#include <vector>
 
 enum DeviceAddress
 {
@@ -27,12 +28,16 @@ private:
 
 class I2cDevice
 {
+public:
+    void write(uint8_t registerAddress, std::vector<uint8_t> data);
+    //void read(uint8_t registerAddress, std::vector<uint8_t>& data);
 protected:
     I2cDevice(I2C_HandleTypeDef* phI2c, DeviceAddress deviceAddress);
     virtual ~I2cDevice();
 private:
     I2C_HandleTypeDef* phI2c;
     DeviceAddress deviceAddress;
+    std::vector<uint8_t> dataBuffer;
 };
 
 #endif /* I2C_H_ */

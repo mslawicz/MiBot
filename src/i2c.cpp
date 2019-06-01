@@ -64,3 +64,13 @@ I2cDevice::I2cDevice(I2C_HandleTypeDef* phI2c, DeviceAddress deviceAddress) :
 }
 
 I2cDevice::~I2cDevice() {}
+
+/*
+ * write data to I2C device
+ */
+void I2cDevice::write(uint8_t registerAddress, std::vector<uint8_t> data)
+{
+    // copy data to buffer
+    dataBuffer = data;
+    HAL_I2C_Mem_Write_IT(phI2c, deviceAddress, registerAddress, I2C_MEMADD_SIZE_8BIT, &dataBuffer[0], dataBuffer.size());
+}
