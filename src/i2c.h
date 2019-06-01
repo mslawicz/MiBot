@@ -10,6 +10,11 @@
 
 #include "stm32f4xx_hal.h"
 
+enum DeviceAddress
+{
+    Gyroscope = 0x6B
+};
+
 class I2cBus
 {
 public:
@@ -22,11 +27,12 @@ private:
 
 class I2cDevice
 {
-public:
-    I2cDevice(I2C_HandleTypeDef* phI2c, uint16_t deviceAddress);
+protected:
+    I2cDevice(I2C_HandleTypeDef* phI2c, DeviceAddress deviceAddress);
+    virtual ~I2cDevice();
 private:
     I2C_HandleTypeDef* phI2c;
-    uint16_t deviceAddress;
+    DeviceAddress deviceAddress;
 };
 
 #endif /* I2C_H_ */

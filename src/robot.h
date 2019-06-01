@@ -17,6 +17,7 @@ public:
     ~Robot();
 private:
     I2cBus* pMemsBus;
+    I2cDevice* pGyroscope;
 };
 
 #endif /* ROBOT_H_ */
