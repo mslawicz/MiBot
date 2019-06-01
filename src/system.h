@@ -10,6 +10,7 @@
 
 #include "uart.h"
 #include "console.h"
+#include "robot.h"
 
 class System
 {
@@ -24,6 +25,7 @@ private:
     System();
     void configClock(void);
     Console* pConsole;
+    Robot* pRobot;
 };
 
 #endif /* SYSTEM_H_ */

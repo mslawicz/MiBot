@@ -88,6 +88,7 @@ void System::config(void)
 {
     Timer::config();
     pConsole = new Console;
+    pRobot = new Robot;
 }
 
 /*
@@ -95,5 +96,6 @@ void System::config(void)
  */
 void System::terminate(void)
 {
+    delete pRobot;
     delete pConsole;
 }
