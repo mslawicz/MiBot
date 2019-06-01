@@ -16,6 +16,7 @@ class Robot
 public:
     Robot();
     ~Robot();
+    I2cBus* getMemsBus(void) const { return pMemsBus; }
 private:
     I2cBus* pMemsBus;
     Gyroscope* pGyroscope;

@@ -21,6 +21,7 @@ public:
     void config(void);
     void terminate(void);
     Console* getConsole(void) const { return pConsole; }
+    Robot* getRobot(void) const { return pRobot; }
 private:
     System();
     void configClock(void);

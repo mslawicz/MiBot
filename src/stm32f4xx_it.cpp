@@ -115,7 +115,7 @@ void SysTick_Handler(void)
   */
 void I2C1_EV_IRQHandler(void)
 {
-  HAL_I2C_EV_IRQHandler(I2cBus::pI2c1);
+  HAL_I2C_EV_IRQHandler(I2cBus::pI2c1->getHandle());
 }
 
 /**

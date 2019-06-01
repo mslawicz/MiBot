@@ -7,8 +7,8 @@
 
 #include "mems.h"
 
-Gyroscope::Gyroscope(I2C_HandleTypeDef* phI2c, DeviceAddress deviceAddress) :
-    I2cDevice(phI2c, deviceAddress)
+Gyroscope::Gyroscope(I2cBus* pBus, DeviceAddress deviceAddress) :
+    I2cDevice(pBus, deviceAddress)
 {
 
 }

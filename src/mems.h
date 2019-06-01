@@ -13,7 +13,7 @@
 class Gyroscope : public I2cDevice
 {
 public:
-    Gyroscope(I2C_HandleTypeDef* phI2c, DeviceAddress deviceAddress);
+    Gyroscope(I2cBus* pBus, DeviceAddress deviceAddress);
 };
 
 #endif /* MEMS_H_ */
