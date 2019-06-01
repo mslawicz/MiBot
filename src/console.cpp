@@ -6,6 +6,7 @@
  */
 
 #include "console.h"
+#include <unordered_map>
 
 Console::Console()
 {
@@ -32,7 +33,7 @@ void Console::handler(void)
 
         // interpret command here
         // XXX send back the string for testing
-        pInterface->send("received: '" + message + "'\r\n");
+        sendMessage(Severity::Debug, "received: '" + message + "'");
 
         // send the prompt character
         sendPrompt();
@@ -40,4 +41,20 @@ void Console::handler(void)
 
     // handle sending queue
     pInterface->transmitHandler();
+}
+
+/*
+ * send log message to console
+ */
+void Console::sendMessage(Severity level, std::string message)
+{
+    const std::unordered_map<Severity, std::string> severityStrings =
+    {
+            {Error, "error"},
+            {Warning, "warning"},
+            {Info, "info"},
+            {Debug, "debug"}
+    };
+    message = severityStrings.find(level)->second + ": " + message + "\r\n";
+    pInterface->send(message);
 }

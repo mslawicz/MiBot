@@ -10,6 +10,14 @@
 
 #include "uart.h"
 
+enum Severity
+{
+    Error,
+    Warning,
+    Info,
+    Debug
+};
+
 class Console
 {
 public:
@@ -18,6 +26,7 @@ public:
     UART* getInterface(void) const { return pInterface; }
     void handler(void);
     void sendPrompt(void) { pInterface->send(">"); }
+    void sendMessage(Severity level, std::string message);
 private:
     UART* pInterface;
 };

@@ -88,6 +88,7 @@ void System::config(void)
 {
     Timer::config();
     pConsole = new Console;
+    pConsole->sendMessage(Severity::Info, "MiBot start");
     pRobot = new Robot;
 }
 
