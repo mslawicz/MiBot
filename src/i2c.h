@@ -22,9 +22,8 @@ private:
 
 class I2cDevice
 {
-protected:
+public:
     I2cDevice(I2C_HandleTypeDef* phI2c, uint16_t deviceAddress);
-    virtual ~I2cDevice();
 private:
     I2C_HandleTypeDef* phI2c;
     uint16_t deviceAddress;

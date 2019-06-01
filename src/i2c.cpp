@@ -63,4 +63,3 @@ I2cDevice::I2cDevice(I2C_HandleTypeDef* phI2c, uint16_t deviceAddress) :
 
 }
 
-I2cDevice::~I2cDevice() {}
