@@ -9,6 +9,7 @@
 #define ROBOT_H_
 
 #include "i2c.h"
+#include "mems.h"
 
 class Robot
 {
@@ -17,7 +18,7 @@ public:
     ~Robot();
 private:
     I2cBus* pMemsBus;
-    I2cDevice* pGyroscope;
+    Gyroscope* pGyroscope;
 };
 
 #endif /* ROBOT_H_ */
