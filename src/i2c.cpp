@@ -56,3 +56,11 @@ I2cBus::~I2cBus()
     // TODO Auto-generated destructor stub
 }
 
+I2cDevice::I2cDevice(I2C_HandleTypeDef* phI2c, uint16_t deviceAddress) :
+        phI2c(phI2c),
+        deviceAddress(deviceAddress)
+{
+
+}
+
+I2cDevice::~I2cDevice() {}

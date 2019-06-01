@@ -20,4 +20,14 @@ private:
     I2C_HandleTypeDef hI2c;
 };
 
+class I2cDevice
+{
+protected:
+    I2cDevice(I2C_HandleTypeDef* phI2c, uint16_t deviceAddress);
+    virtual ~I2cDevice();
+private:
+    I2C_HandleTypeDef* phI2c;
+    uint16_t deviceAddress;
+};
+
 #endif /* I2C_H_ */
