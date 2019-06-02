@@ -7,17 +7,16 @@
 
 #include "mems.h"
 
-Mems::Mems()
-{
+Mems::Mems() :
     // MEMS (X-NUCLEO-IKS01A2) sensors use I2C1 bus
-    pBus = new I2cBus(I2C1);
-    pGyroscope = new Gyroscope(pBus, DeviceAddress::GyroscopeAdd);
+    bus(I2C1)
+{
+    pGyroscope = new Gyroscope(&bus, DeviceAddress::GyroscopeAdd);
 }
 
 Mems::~Mems()
 {
     delete pGyroscope;
-    delete pBus;
 }
 
 Gyroscope::Gyroscope(I2cBus* pBus, DeviceAddress deviceAddress) :

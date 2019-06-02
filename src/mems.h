@@ -27,10 +27,10 @@ class Mems
 public:
     Mems(void);
     ~Mems(void);
-    I2cBus* getBus(void) const { return pBus; }
+    I2cBus& getBus(void) { return bus; }
     void test(void);    //XXX
 private:
-    I2cBus* pBus;
+    I2cBus bus;
     Gyroscope* pGyroscope;
     Timer timer;
 };
