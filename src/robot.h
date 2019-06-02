@@ -14,9 +14,9 @@ class Robot
 public:
     Robot();
     ~Robot();
-    Mems* getMems(void) const { return pMems; }
+    Mems& getMems(void) { return mems; }
 private:
-    Mems* pMems;
+    Mems mems;
 };
 
 #endif /* ROBOT_H_ */

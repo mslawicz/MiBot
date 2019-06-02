@@ -9,11 +9,9 @@
 
 Robot::Robot()
 {
-    pMems = new Mems;
 }
 
 Robot::~Robot()
 {
-    delete pMems;
 }
 
