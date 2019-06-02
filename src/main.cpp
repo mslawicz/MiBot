@@ -38,6 +38,8 @@ int main(void)
             ledTimer.reset();
         }
 
+        System::getInstance()->getRobot()->getMems()->test();
+
         System::getInstance()->getConsole()->handler();
     }
 

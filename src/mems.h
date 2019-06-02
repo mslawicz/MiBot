@@ -9,6 +9,12 @@
 #define MEMS_H_
 
 #include "i2c.h"
+#include "timer.h"//XXX
+
+enum Lsm6dslRegister
+{
+    INT1_CTRL = 0x0D
+};
 
 class Gyroscope : public I2cDevice
 {
@@ -22,9 +28,11 @@ public:
     Mems(void);
     ~Mems(void);
     I2cBus* getBus(void) const { return pBus; }
+    void test(void);    //XXX
 private:
     I2cBus* pBus;
     Gyroscope* pGyroscope;
+    Timer timer;
 };
 
 

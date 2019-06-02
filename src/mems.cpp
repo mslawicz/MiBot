@@ -26,3 +26,11 @@ Gyroscope::Gyroscope(I2cBus* pBus, DeviceAddress deviceAddress) :
 
 }
 
+void Mems::test(void)
+{
+    if(timer.elapsed(10000))
+    {
+        timer.reset();
+        pGyroscope->write(Lsm6dslRegister::INT1_CTRL, std::vector<uint8_t>{0x12, 0x34});
+    }
+}
