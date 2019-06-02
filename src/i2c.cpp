@@ -61,7 +61,7 @@ I2cDevice::I2cDevice(I2cBus* pBus, DeviceAddress deviceAddress) :
         pBus(pBus),
         deviceAddress(deviceAddress)
 {
-
+    System::getInstance()->getConsole()->sendMessage(Severity::Info, "I2C device created, addr=" + std::to_string(deviceAddress));
 }
 
 I2cDevice::~I2cDevice() {}
@@ -90,7 +90,7 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c)
     if(hi2c->Instance == I2C1)
     {
         // mark this I2C bus as free
-        System::getInstance()->getRobot()->getMemsBus()->markAsFree();
+        System::getInstance()->getRobot()->getMems()->getBus()->markAsFree();
     }
 }
 

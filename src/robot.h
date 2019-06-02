@@ -6,9 +6,7 @@
  */
 
 #ifndef ROBOT_H_
-#define ROBOT_H_
 
-#include "i2c.h"
 #include "mems.h"
 
 class Robot
@@ -16,10 +14,9 @@ class Robot
 public:
     Robot();
     ~Robot();
-    I2cBus* getMemsBus(void) const { return pMemsBus; }
+    Mems* getMems(void) const { return pMems; }
 private:
-    I2cBus* pMemsBus;
-    Gyroscope* pGyroscope;
+    Mems* pMems;
 };
 
 #endif /* ROBOT_H_ */

@@ -16,4 +16,17 @@ public:
     Gyroscope(I2cBus* pBus, DeviceAddress deviceAddress);
 };
 
+class Mems
+{
+public:
+    Mems(void);
+    ~Mems(void);
+    I2cBus* getBus(void) const { return pBus; }
+private:
+    I2cBus* pBus;
+    Gyroscope* pGyroscope;
+};
+
+
+
 #endif /* MEMS_H_ */
