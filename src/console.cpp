@@ -8,14 +8,13 @@
 #include "console.h"
 #include <unordered_map>
 
-Console::Console()
+Console::Console() :
+    interface(USART2, 115200)
 {
-    pInterface = new UART(USART2, 115200);
 }
 
 Console::~Console()
 {
-    delete pInterface;
 }
 
 /*
@@ -24,12 +23,12 @@ Console::~Console()
 void Console::handler(void)
 {
     // handle a received string
-    if(pInterface->stringReceived())
+    if(interface.stringReceived())
     {
         // there is a message in reception queue
-        auto message = pInterface->getReceivedString();
+        auto message = interface.getReceivedString();
         // echo CR LF
-        pInterface->send("\r\n");
+        interface.send("\r\n");
 
         // interpret command here
         // XXX send back the string for testing
@@ -40,7 +39,7 @@ void Console::handler(void)
     }
 
     // handle sending queue
-    pInterface->transmitHandler();
+    interface.transmitHandler();
 }
 
 /*
@@ -56,5 +55,5 @@ void Console::sendMessage(Severity level, std::string message)
             {Debug, "debug"}
     };
     message = severityStrings.find(level)->second + ": " + message + "\r\n";
-    pInterface->send(message);
+    interface.send(message);
 }

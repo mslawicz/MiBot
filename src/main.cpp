@@ -24,7 +24,7 @@ int main(void)
 
     Timer ledTimer;
     // start reception of the first character
-    System::getInstance()->getConsole()->getInterface()->startReception();
+    System::getInstance()->getConsole()->getInterface().startReception();
 
     // send first prompt
     System::getInstance()->getConsole()->sendPrompt();

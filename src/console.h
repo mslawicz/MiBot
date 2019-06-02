@@ -23,12 +23,12 @@ class Console
 public:
     Console();
     ~Console();
-    UART* getInterface(void) const { return pInterface; }
+    UART& getInterface(void) { return interface; }
     void handler(void);
-    void sendPrompt(void) { pInterface->send(">"); }
+    void sendPrompt(void) { interface.send(">"); }
     void sendMessage(Severity level, std::string message);
 private:
-    UART* pInterface;
+    UART interface;
 };
 
 #endif /* CONSOLE_H_ */
