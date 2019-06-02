@@ -31,7 +31,7 @@ public:
     void test(void);    //XXX
 private:
     I2cBus bus;
-    Gyroscope* pGyroscope;
+    Gyroscope gyroscope;
     Timer timer;
 };
 
