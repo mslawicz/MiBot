@@ -73,10 +73,11 @@ void I2cDevice::write(uint8_t registerAddress, std::vector<uint8_t> data)
 {
     // copy data to buffer
     dataBuffer = data;
-    if(HAL_I2C_Mem_Write_IT(pBus->getHandle(), deviceAddress, registerAddress, I2C_MEMADD_SIZE_8BIT, &dataBuffer[0], dataBuffer.size()) == HAL_OK)
-    {
-        pBus->markAsBusy();
-    }
+//    if(HAL_I2C_Mem_Write_IT(pBus->getHandle(), deviceAddress, registerAddress, I2C_MEMADD_SIZE_8BIT, &dataBuffer[0], dataBuffer.size()) == HAL_OK)
+//    {
+//        pBus->markAsBusy();
+//    }
+    auto status = HAL_I2C_Mem_Write(pBus->getHandle(), deviceAddress, registerAddress, I2C_MEMADD_SIZE_8BIT, &dataBuffer[0], dataBuffer.size(), 5000);
 }
 
 /**
