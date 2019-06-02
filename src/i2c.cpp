@@ -39,15 +39,15 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
     hI2c.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
     if (HAL_I2C_Init(&hI2c) == HAL_OK)
     {
-        System::getInstance()->getConsole()->sendMessage(Severity::Info, name + " initialized");
+        System::getInstance().getConsole()->sendMessage(Severity::Info, name + " initialized");
     }
     else
     {
-        System::getInstance()->getConsole()->sendMessage(Severity::Error, name + " initialization failed");
+        System::getInstance().getConsole()->sendMessage(Severity::Error, name + " initialization failed");
     }
     if(HAL_I2CEx_ConfigAnalogFilter(&hI2c, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
     {
-        System::getInstance()->getConsole()->sendMessage(Severity::Error, name + " filter configuration failed");
+        System::getInstance().getConsole()->sendMessage(Severity::Error, name + " filter configuration failed");
     }
     busy = false;
 }
@@ -61,7 +61,7 @@ I2cDevice::I2cDevice(I2cBus* pBus, DeviceAddress deviceAddress) :
         pBus(pBus),
         deviceAddress(deviceAddress)
 {
-    System::getInstance()->getConsole()->sendMessage(Severity::Info, "I2C device created, addr=" + std::to_string(deviceAddress));
+    System::getInstance().getConsole()->sendMessage(Severity::Info, "I2C device created, addr=" + std::to_string(deviceAddress));
 }
 
 I2cDevice::~I2cDevice() {}
@@ -90,7 +90,7 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c)
     if(hi2c->Instance == I2C1)
     {
         // mark this I2C bus as free
-        System::getInstance()->getRobot()->getMems()->getBus().markAsFree();
+        System::getInstance().getRobot()->getMems()->getBus().markAsFree();
     }
 }
 

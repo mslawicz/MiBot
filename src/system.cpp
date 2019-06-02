@@ -33,10 +33,10 @@ System::~System()
  * get the singleton instance
  * object constructor is executed in the first call
  */
-System* System::getInstance(void)
+System& System::getInstance(void)
 {
     static System singleton;
-    return &singleton;
+    return singleton;
 }
 
 /*

@@ -16,7 +16,7 @@ class System
 {
 public:
     ~System();
-    static System* getInstance(void);
+    static System& getInstance(void);
     void errorHandler(void) {};
     void config(void);
     void terminate(void);

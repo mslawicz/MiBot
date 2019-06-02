@@ -33,18 +33,18 @@ void Timer::config(void)
     Timer::hTim.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
     if (HAL_TIM_Base_Init(&Timer::hTim) != HAL_OK)
     {
-      System::getInstance()->errorHandler();
+      System::getInstance().errorHandler();
     }
     sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
     if (HAL_TIM_ConfigClockSource(&Timer::hTim, &sClockSourceConfig) != HAL_OK)
     {
-        System::getInstance()->errorHandler();
+        System::getInstance().errorHandler();
     }
     sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
     sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
     if (HAL_TIMEx_MasterConfigSynchronization(&Timer::hTim, &sMasterConfig) != HAL_OK)
     {
-        System::getInstance()->errorHandler();
+        System::getInstance().errorHandler();
     }
     HAL_TIM_Base_Start(&Timer::hTim);
 }

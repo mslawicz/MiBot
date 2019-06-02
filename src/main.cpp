@@ -17,17 +17,17 @@
 
 int main(void)
 {
-    System::getInstance()->config();
+    System::getInstance().config();
 
     GPIO pushbutton(USER_BUTTON_GPIO_PORT, USER_BUTTON_PIN, GPIO_MODE_INPUT, GPIO_PULLUP);
     GPIO led(LED2_GPIO_PORT, LED2_PIN, GPIO_MODE_OUTPUT_PP);
 
     Timer ledTimer;
     // start reception of the first character
-    System::getInstance()->getConsole()->getInterface().startReception();
+    System::getInstance().getConsole()->getInterface().startReception();
 
     // send first prompt
-    System::getInstance()->getConsole()->sendPrompt();
+    System::getInstance().getConsole()->sendPrompt();
 
     // main loop
     while(1)
@@ -38,10 +38,10 @@ int main(void)
             ledTimer.reset();
         }
 
-        System::getInstance()->getRobot()->getMems()->test();
+        System::getInstance().getRobot()->getMems()->test();
 
-        System::getInstance()->getConsole()->handler();
+        System::getInstance().getConsole()->handler();
     }
 
-    System::getInstance()->terminate();
+    System::getInstance().terminate();
 }
