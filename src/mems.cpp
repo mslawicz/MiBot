@@ -6,6 +6,8 @@
  */
 
 #include "mems.h"
+#include "system.h"//XXX
+#include "console.h"//XXX
 
 Mems::Mems() :
     // MEMS (X-NUCLEO-IKS01A2) sensors use I2C1 bus
@@ -26,7 +28,7 @@ Gyroscope::Gyroscope(I2cBus* pBus, DeviceAddress deviceAddress) :
 
 void Mems::test(void)
 {
-    if(timer.elapsed(10000))
+    if(timer.elapsed(500000))
     {
         timer.reset();
         gyroscope.readRequest(Lsm6dslRegister::WHO_AM_I, 1);
@@ -34,5 +36,6 @@ void Mems::test(void)
     if(gyroscope.isDataReady())
     {
         auto data = gyroscope.getData();
+        System::getInstance().getConsole()->sendMessage(Severity::Info, "I2C received length=" + std::to_string(data.size()) + "  byte=" + std::to_string((int)data[0]));
     }
 }
