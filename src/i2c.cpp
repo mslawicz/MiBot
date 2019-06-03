@@ -11,7 +11,7 @@
 
 I2cBus* I2cBus::pI2c1 = nullptr;
 
-I2cBus::I2cBus(I2C_TypeDef* instance) : testPin(GPIOC, GPIO_PIN_9, GPIO_MODE_OUTPUT_PP) //XXX
+I2cBus::I2cBus(I2C_TypeDef* instance)
 {
     std::string name;
     if(instance == I2C1)

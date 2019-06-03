@@ -15,6 +15,8 @@
 #include "gpio.h"
 #include "timer.h"
 
+GPIO testPin(GPIOC, GPIO_PIN_9, GPIO_MODE_OUTPUT_PP); //XXX
+
 int main(void)
 {
     System::getInstance().config();

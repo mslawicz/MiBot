@@ -9,7 +9,6 @@
 #define I2C_H_
 
 #include "stm32f4xx_hal.h"
-#include "gpio.h"//XXX
 #include <vector>
 
 enum DeviceAddress
@@ -23,13 +22,12 @@ public:
     I2cBus(I2C_TypeDef* instance);
     ~I2cBus();
     I2C_HandleTypeDef* getHandle(void) const { return const_cast<__I2C_HandleTypeDef*>(&hI2c); }
-    void markAsBusy(void) { busy = true; testPin.write(GPIO_PIN_SET);} //XXX
-    void markAsFree(void) { busy = false; testPin.write(GPIO_PIN_RESET);} //XXX
+    void markAsBusy(void) { busy = true; }
+    void markAsFree(void) { busy = false; }
     static I2cBus* pI2c1;
 private:
     I2C_HandleTypeDef hI2c;
     volatile bool busy;
-    GPIO testPin;//XXX
 };
 
 class I2cDevice
