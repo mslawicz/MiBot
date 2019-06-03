@@ -50,6 +50,7 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
         System::getInstance().getConsole()->sendMessage(Severity::Error, name + " filter configuration failed");
     }
     busy = false;
+    pLastReadDevice = nullptr;
 }
 
 I2cBus::~I2cBus()
@@ -62,6 +63,7 @@ I2cDevice::I2cDevice(I2cBus* pBus, DeviceAddress deviceAddress) :
         deviceAddress(deviceAddress)
 {
     System::getInstance().getConsole()->sendMessage(Severity::Info, "I2C device created, addr=" + std::to_string(deviceAddress));
+    newDataReady = false;
 }
 
 I2cDevice::~I2cDevice() {}
@@ -118,5 +120,17 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
     {
         // mark this I2C bus as free
         System::getInstance().getRobot()->getMems().getBus().markAsFree();
+        System::getInstance().getRobot()->getMems().getBus().markNewDataReady();
+    }
+}
+
+/*
+ * mark that new received data is ready in the device buffer
+ */
+void I2cBus::markNewDataReady(void)
+{
+    if(pLastReadDevice != nullptr)
+    {
+        pLastReadDevice->markNewDataReady();
     }
 }

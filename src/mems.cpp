@@ -31,4 +31,8 @@ void Mems::test(void)
         timer.reset();
         gyroscope.readRequest(Lsm6dslRegister::WHO_AM_I, 1);
     }
+    if(gyroscope.isDataReady())
+    {
+        auto data = gyroscope.getData();
+    }
 }
