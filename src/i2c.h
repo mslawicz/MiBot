@@ -34,13 +34,13 @@ class I2cDevice
 {
 public:
     void write(uint8_t registerAddress, std::vector<uint8_t> data);
-    //void read(uint8_t registerAddress, std::vector<uint8_t>& data);
+    void readRequest(uint8_t registerAddress, uint16_t size);
 protected:
     I2cDevice(I2cBus* pBus, DeviceAddress deviceAddress);
     virtual ~I2cDevice();
 private:
     I2cBus* pBus;       // I2C bus for this device
-    DeviceAddress deviceAddress;        // I2C device address (7-bit right aligned)
+    DeviceAddress deviceAddress;        // I2C device address (7-bit left aligned)
     std::vector<uint8_t> dataBuffer;
 };
 

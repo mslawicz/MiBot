@@ -94,4 +94,29 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c)
     }
 }
 
+/*
+ * request reading I2C device
+ */
+void I2cDevice::readRequest(uint8_t registerAddress, uint16_t size)
+{
+    dataBuffer.assign(size, 0);
+    if(HAL_I2C_Mem_Read_IT(pBus->getHandle(), deviceAddress, registerAddress, I2C_MEMADD_SIZE_8BIT, &dataBuffer[0], size))
+    {
+        pBus->markAsBusy();
+    }
+}
 
+/**
+  * @brief  Memory Rx Transfer completed callback.
+  * @param  hi2c Pointer to a I2C_HandleTypeDef structure that contains
+  *                the configuration information for the specified I2C.
+  * @retval None
+  */
+void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+    if(hi2c->Instance == I2C1)
+    {
+        // mark this I2C bus as free
+        System::getInstance().getRobot()->getMems().getBus().markAsFree();
+    }
+}

@@ -13,7 +13,8 @@
 
 enum Lsm6dslRegister
 {
-    INT1_CTRL = 0x0D
+    INT1_CTRL = 0x0D,
+    WHO_AM_I = 0x0F
 };
 
 class Gyroscope : public I2cDevice
