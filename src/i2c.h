@@ -13,7 +13,7 @@
 
 enum DeviceAddress
 {
-    GyroscopeAdd = 0xD6 >> 1
+    GyroscopeAdd = 0xD6
 };
 
 class I2cBus
