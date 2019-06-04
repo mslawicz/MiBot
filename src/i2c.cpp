@@ -102,7 +102,7 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c)
 void I2cDevice::readRequest(uint8_t registerAddress, uint16_t size)
 {
     dataBuffer.assign(size, 0);
-    if(HAL_I2C_Mem_Read_IT(pBus->getHandle(), deviceAddress, registerAddress, I2C_MEMADD_SIZE_8BIT, &dataBuffer[0], size))
+    if(HAL_I2C_Mem_Read_IT(pBus->getHandle(), deviceAddress, registerAddress, I2C_MEMADD_SIZE_8BIT, &dataBuffer[0], size) == HAL_OK)
     {
         pBus->markAsBusy();
         pBus->pLastReadDevice = this;
