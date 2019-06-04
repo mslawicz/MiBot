@@ -105,6 +105,7 @@ void I2cDevice::readRequest(uint8_t registerAddress, uint16_t size)
     if(HAL_I2C_Mem_Read_IT(pBus->getHandle(), deviceAddress, registerAddress, I2C_MEMADD_SIZE_8BIT, &dataBuffer[0], size))
     {
         pBus->markAsBusy();
+        pBus->pLastReadDevice = this;
     }
 }
 
@@ -131,6 +132,6 @@ void I2cBus::markNewDataReady(void)
 {
     if(pLastReadDevice != nullptr)
     {
-        pLastReadDevice->markNewDataReady();
+        pLastReadDevice->newDataReady = true;
     }
 }

@@ -27,9 +27,9 @@ public:
     void markAsBusy(void) { busy = true; }
     void markAsFree(void) { busy = false; }
     bool isBusy(void) const { return busy; }
-    void setLastServedDevice(I2cDevice* pDevice) { pLastReadDevice = pDevice; }
     void markNewDataReady(void);
     static I2cBus* pI2c1;
+    friend I2cDevice;
 private:
     I2C_HandleTypeDef hI2c;
     volatile bool busy;
@@ -42,8 +42,8 @@ public:
     void write(uint8_t registerAddress, std::vector<uint8_t> data);
     void readRequest(uint8_t registerAddress, uint16_t size);
     std::vector<uint8_t> getData(void) { newDataReady = false; return dataBuffer; }
-    void markNewDataReady(void) { newDataReady = true; }
     bool isDataReady(void) const { return newDataReady; }
+    friend I2cBus;
 protected:
     I2cDevice(I2cBus* pBus, DeviceAddress deviceAddress);
     virtual ~I2cDevice();
