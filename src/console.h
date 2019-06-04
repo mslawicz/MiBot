@@ -27,6 +27,7 @@ public:
     void handler(void);
     void sendPrompt(void) { interface.send(">"); }
     void sendMessage(Severity level, std::string message);
+    static std::string toHex(uint32_t value, uint8_t positions = 0, bool prefix = true);
 private:
     UART interface;
 };

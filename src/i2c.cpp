@@ -62,7 +62,7 @@ I2cDevice::I2cDevice(I2cBus* pBus, DeviceAddress deviceAddress) :
         pBus(pBus),
         deviceAddress(deviceAddress)
 {
-    System::getInstance().getConsole()->sendMessage(Severity::Info, "I2C device created, addr=" + std::to_string(deviceAddress));
+    System::getInstance().getConsole()->sendMessage(Severity::Info, "I2C device created, addr=" + Console::toHex(deviceAddress, 2));
     newDataReady = false;
 }
 

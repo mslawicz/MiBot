@@ -28,7 +28,7 @@ Gyroscope::Gyroscope(I2cBus* pBus, DeviceAddress deviceAddress) :
 
 void Mems::test(void)
 {
-    if(timer.elapsed(500000))
+    if(timer.elapsed(2000000))
     {
         timer.reset();
         gyroscope.readRequest(Lsm6dslRegister::WHO_AM_I, 1);
@@ -36,6 +36,7 @@ void Mems::test(void)
     if(gyroscope.isDataReady())
     {
         auto data = gyroscope.getData();
-        System::getInstance().getConsole()->sendMessage(Severity::Info, "I2C received length=" + std::to_string(data.size()) + "  byte=" + std::to_string((int)data[0]));
+        auto sss = Console::toHex((int)data[0]);
+        System::getInstance().getConsole()->sendMessage(Severity::Info, "I2C received length=" + std::to_string(data.size()) + "  byte=" + Console::toHex((int)data[0], 2));
     }
 }
