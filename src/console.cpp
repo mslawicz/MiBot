@@ -58,6 +58,11 @@ void Console::sendMessage(Severity level, std::string message)
     interface.send(message);
 }
 
+/*
+ * print hex number to std::string
+ * positions - minimal digits, 0=auto
+ * prefix - adds '0x' at the beginning
+ */
 std::string Console::toHex(uint32_t value, uint8_t positions, bool prefix)
 {
     std::string hexString;
