@@ -26,7 +26,7 @@ int main(void)
     GPIO led(LED2_GPIO_PORT, LED2_PIN, GPIO_MODE_OUTPUT_PP);
 
     SpiBus spi1(SPI1); //XXX
-    TestDevice spiTestDevice(&spi1); //XXX
+    TestDevice spiTestDevice(&spi1, GPIOC, GPIO_PIN_4); //XXX
 
     Timer ledTimer;
     // start reception of the first character

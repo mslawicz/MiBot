@@ -9,6 +9,7 @@
 #define SPI_H_
 
 #include "stm32f4xx_hal.h"
+#include "gpio.h"
 #include <vector>
 
 class SpiDevice;
@@ -20,32 +21,35 @@ public:
     ~SpiBus();
     SPI_HandleTypeDef* getHandle(void) const { return const_cast<__SPI_HandleTypeDef*>(&hSpi); }
     void markAsBusy(void) { busy = true; }
-    void markAsFree(void) { busy = false; }
+    void markAsFree(void);
     static SpiBus* pSpi1;
     friend SpiDevice;
 private:
     SPI_HandleTypeDef hSpi;
     SPI_TypeDef* instance;
     bool busy;      // true if SPI bus is busy
+    SpiDevice* lastServedDevice;
 };
 
 class SpiDevice
 {
 public:
     void send(std::vector<uint8_t> data);
+    friend SpiBus;
 protected:
-    SpiDevice(SpiBus* pBus);
+    SpiDevice(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS);
     virtual ~SpiDevice();
 private:
     SpiBus* pBus;       // SPI bus for this device
     std::vector<uint8_t> dataToSend;    // vector of data to send
+    GPIO chipSelect;
 };
 
 // XXX SPI test device
 class TestDevice : public SpiDevice
 {
 public:
-    TestDevice(SpiBus* pBus) : SpiDevice(pBus) {}
+    TestDevice(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS) : SpiDevice(pBus, portCS, pinCS) {}
 };
 
 #endif /* SPI_H_ */

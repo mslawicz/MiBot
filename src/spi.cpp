@@ -6,7 +6,6 @@
  */
 
 #include "spi.h"
-#include "gpio.h"
 #include "system.h"
 
 SpiBus* SpiBus::pSpi1 = nullptr;
@@ -52,6 +51,7 @@ SpiBus::SpiBus(SPI_TypeDef* instance) :
         System::getInstance().getConsole()->sendMessage(Severity::Error, name + " initialization failed");
     }
     busy = false;
+    lastServedDevice = nullptr;
 }
 
 SpiBus::~SpiBus()
@@ -59,12 +59,26 @@ SpiBus::~SpiBus()
     // TODO Auto-generated destructor stub
 }
 
+/*
+ * mark the SPI bus inactive and release chip select of the current device
+ */
+void SpiBus::markAsFree(void)
+{
+    busy = false;
+    if(lastServedDevice != nullptr)
+    {
+        // current served device chip select inactive
+        lastServedDevice->chipSelect.write(GPIO_PinState::GPIO_PIN_SET);
+    }
+}
 
-SpiDevice::SpiDevice(SpiBus* pBus) :
-        pBus(pBus)
+
+SpiDevice::SpiDevice(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS) :
+        pBus(pBus),
+        chipSelect(portCS, pinCS, GPIO_MODE_OUTPUT_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH)
 {
     System::getInstance().getConsole()->sendMessage(Severity::Info, "SPI device created");
-
+    chipSelect.write(GPIO_PinState::GPIO_PIN_SET);
 }
 
 SpiDevice::~SpiDevice() {}
@@ -75,9 +89,17 @@ SpiDevice::~SpiDevice() {}
 void SpiDevice::send(std::vector<uint8_t> data)
 {
     dataToSend = data;
+    chipSelect.write(GPIO_PinState::GPIO_PIN_RESET);
     if(HAL_SPI_Transmit_IT(pBus->getHandle(), &dataToSend[0], dataToSend.size()))
     {
         pBus->markAsBusy();
+        pBus->lastServedDevice = this;
+    }
+    else
+    {
+        // no transmission started
+        chipSelect.write(GPIO_PinState::GPIO_PIN_SET);
+        pBus->lastServedDevice = nullptr;
     }
 }
 
