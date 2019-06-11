@@ -37,6 +37,6 @@ void Mems::test(void)
     {
         auto data = gyroscope.getData();
         auto sss = Console::toHex((int)data[0]);
-        System::getInstance().getConsole()->sendMessage(Severity::Info, "I2C received length=" + std::to_string(data.size()) + "  byte=" + Console::toHex((int)data[0], 2));
+        //System::getInstance().getConsole()->sendMessage(Severity::Info, "I2C received length=" + std::to_string(data.size()) + "  byte=" + Console::toHex((int)data[0], 2));
     }
 }

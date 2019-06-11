@@ -37,7 +37,7 @@ SpiBus::SpiBus(SPI_TypeDef* instance) :
     hSpi.Init.CLKPolarity = SPI_POLARITY_LOW;
     hSpi.Init.CLKPhase = SPI_PHASE_1EDGE;
     hSpi.Init.NSS = SPI_NSS_SOFT;
-    hSpi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
+    hSpi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;    // clock 666 kHz
     hSpi.Init.FirstBit = SPI_FIRSTBIT_MSB;
     hSpi.Init.TIMode = SPI_TIMODE_DISABLE;
     hSpi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -90,7 +90,7 @@ void SpiDevice::send(std::vector<uint8_t> data)
 {
     dataToSend = data;
     chipSelect.write(GPIO_PinState::GPIO_PIN_RESET);
-    if(HAL_SPI_Transmit_IT(pBus->getHandle(), &dataToSend[0], dataToSend.size()))
+    if(HAL_SPI_Transmit_IT(pBus->getHandle(), &dataToSend[0], dataToSend.size()) == HAL_OK)
     {
         pBus->markAsBusy();
         pBus->lastServedDevice = this;
