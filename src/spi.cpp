@@ -51,7 +51,7 @@ SpiBus::SpiBus(SPI_TypeDef* instance) :
     {
         System::getInstance().getConsole()->sendMessage(Severity::Error, name + " initialization failed");
     }
-
+    busy = false;
 }
 
 SpiBus::~SpiBus()
@@ -60,13 +60,39 @@ SpiBus::~SpiBus()
 }
 
 
-SpiDevice::SpiDevice()
+SpiDevice::SpiDevice(SpiBus* pBus) :
+        pBus(pBus)
 {
-    // TODO Auto-generated constructor stub
+    System::getInstance().getConsole()->sendMessage(Severity::Info, "SPI device created");
 
 }
 
-SpiDevice::~SpiDevice()
+SpiDevice::~SpiDevice() {}
+
+/*
+ * send data to SPI device
+ */
+void SpiDevice::send(std::vector<uint8_t> data)
 {
-    // TODO Auto-generated destructor stub
+    dataToSend = data;
+    if(HAL_SPI_Transmit_IT(pBus->getHandle(), &dataToSend[0], dataToSend.size()))
+    {
+        pBus->markAsBusy();
+    }
+}
+
+
+/**
+  * @brief  Tx Transfer completed callback.
+  * @param  hspi pointer to a SPI_HandleTypeDef structure that contains
+  *               the configuration information for SPI module.
+  * @retval None
+  */
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+    if(hspi->Instance == SPI1)
+    {
+        // mark this SPI bus as free
+        SpiBus::pSpi1->markAsFree();
+    }
 }
