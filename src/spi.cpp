@@ -9,6 +9,8 @@
 #include "gpio.h"
 #include "system.h"
 
+SpiBus* SpiBus::pSpi1 = nullptr;
+
 SpiBus::SpiBus(SPI_TypeDef* instance) :
     instance(instance)
 {

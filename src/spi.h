@@ -24,9 +24,9 @@ private:
 
 class SpiDevice
 {
-public:
+protected:
     SpiDevice();
-    ~SpiDevice();
+    virtual ~SpiDevice();
 };
 
 #endif /* SPI_H_ */
