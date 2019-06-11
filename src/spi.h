@@ -41,4 +41,11 @@ private:
     std::vector<uint8_t> dataToSend;    // vector of data to send
 };
 
+// XXX SPI test device
+class TestDevice : public SpiDevice
+{
+public:
+    TestDevice(SpiBus* pBus) : SpiDevice(pBus) {}
+};
+
 #endif /* SPI_H_ */

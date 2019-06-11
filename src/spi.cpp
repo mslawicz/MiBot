@@ -38,12 +38,12 @@ SpiBus::SpiBus(SPI_TypeDef* instance) :
     hSpi.Init.CLKPolarity = SPI_POLARITY_LOW;
     hSpi.Init.CLKPhase = SPI_PHASE_1EDGE;
     hSpi.Init.NSS = SPI_NSS_SOFT;
-    hSpi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+    hSpi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
     hSpi.Init.FirstBit = SPI_FIRSTBIT_MSB;
     hSpi.Init.TIMode = SPI_TIMODE_DISABLE;
     hSpi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
     hSpi.Init.CRCPolynomial = 10;
-    if (HAL_SPI_Init(&hSpi) != HAL_OK)
+    if (HAL_SPI_Init(&hSpi) == HAL_OK)
     {
         System::getInstance().getConsole()->sendMessage(Severity::Info, name + " initialized");
     }
