@@ -7,9 +7,9 @@
 
 #include "eeprom.h"
 
-Eeprom::Eeprom()
+Eeprom::Eeprom(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS) :
+    SpiDevice(pBus, portCS, pinCS)
 {
-    // TODO Auto-generated constructor stub
 
 }
 

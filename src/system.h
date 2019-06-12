@@ -11,6 +11,8 @@
 #include "uart.h"
 #include "console.h"
 #include "robot.h"
+#include "spi.h"
+#include "eeprom.h"
 
 class System
 {
@@ -25,6 +27,8 @@ public:
 private:
     System();
     void configClock(void);
+    SpiBus* pSpi1;
+    Eeprom* pEeprom;
     Console* pConsole;
     Robot* pRobot;
 };

@@ -8,10 +8,13 @@
 #ifndef EEPROM_H_
 #define EEPROM_H_
 
-class Eeprom
+#include "spi.h"
+#include "gpio.h"
+
+class Eeprom : public SpiDevice
 {
 public:
-    Eeprom();
+    Eeprom(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS);
     ~Eeprom();
 };
 
