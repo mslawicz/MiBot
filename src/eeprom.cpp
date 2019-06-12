@@ -25,6 +25,7 @@ void Eeprom::test(void)
     if(timer.elapsed(10000))
     {
         timer.reset();
-        receiveRequest(4);
+        send(std::vector<uint8_t>{0xF5, 0x12, 0x34, 0x56});
+        //receiveRequest(4); //this cause the problem with I2C
     }
 }
