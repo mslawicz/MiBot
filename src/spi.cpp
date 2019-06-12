@@ -51,7 +51,7 @@ SpiBus::SpiBus(SPI_TypeDef* instance) :
         System::getInstance().getConsole()->sendMessage(Severity::Error, name + " initialization failed");
     }
     busy = false;
-    lastServedDevice = nullptr;
+    pLastServedDevice = nullptr;
 }
 
 SpiBus::~SpiBus()
@@ -65,10 +65,10 @@ SpiBus::~SpiBus()
 void SpiBus::markAsFree(void)
 {
     busy = false;
-    if(lastServedDevice != nullptr)
+    if(pLastServedDevice != nullptr)
     {
         // current served device chip select inactive
-        lastServedDevice->chipSelect.write(GPIO_PinState::GPIO_PIN_SET);
+        pLastServedDevice->chipSelect.write(GPIO_PinState::GPIO_PIN_SET);
     }
 }
 
@@ -79,6 +79,7 @@ SpiDevice::SpiDevice(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS) :
 {
     System::getInstance().getConsole()->sendMessage(Severity::Info, "SPI device created");
     chipSelect.write(GPIO_PinState::GPIO_PIN_SET);
+    newDataReady = false;
 }
 
 SpiDevice::~SpiDevice() {}
@@ -93,13 +94,33 @@ void SpiDevice::send(std::vector<uint8_t> data)
     if(HAL_SPI_Transmit_IT(pBus->getHandle(), &dataToSend[0], dataToSend.size()) == HAL_OK)
     {
         pBus->markAsBusy();
-        pBus->lastServedDevice = this;
+        pBus->pLastServedDevice = this;
     }
     else
     {
         // no transmission started
         chipSelect.write(GPIO_PinState::GPIO_PIN_SET);
-        pBus->lastServedDevice = nullptr;
+        pBus->pLastServedDevice = nullptr;
+    }
+}
+
+/*
+ * receive data from SPI device
+ */
+void SpiDevice::receiveRequest(uint16_t size)
+{
+    receptionBuffer.assign(size, 0);
+    chipSelect.write(GPIO_PinState::GPIO_PIN_RESET);
+    if(HAL_SPI_Receive_IT(pBus->getHandle(), &receptionBuffer[0], size) == HAL_OK)
+    {
+        pBus->markAsBusy();
+        pBus->pLastServedDevice = this;
+    }
+    else
+    {
+        // no reception started
+        chipSelect.write(GPIO_PinState::GPIO_PIN_SET);
+        pBus->pLastServedDevice = nullptr;
     }
 }
 
@@ -116,5 +137,33 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
     {
         // mark this SPI bus as free
         SpiBus::pSpi1->markAsFree();
+    }
+}
+
+
+/**
+  * @brief  Rx Transfer completed callback.
+  * @param  hspi pointer to a SPI_HandleTypeDef structure that contains
+  *               the configuration information for SPI module.
+  * @retval None
+  */
+void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+    if(hspi->Instance == SPI1)
+    {
+        // mark this SPI bus as free
+        SpiBus::pSpi1->markAsFree();
+        SpiBus::pSpi1->markNewDataReady();
+    }
+}
+
+/*
+ * mark that new received data is ready in the device buffer
+ */
+void SpiBus::markNewDataReady(void)
+{
+    if(pLastServedDevice != nullptr)
+    {
+        pLastServedDevice->newDataReady = true;
     }
 }

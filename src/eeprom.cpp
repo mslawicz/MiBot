@@ -25,6 +25,6 @@ void Eeprom::test(void)
     if(timer.elapsed(10000))
     {
         timer.reset();
-        send(std::vector<uint8_t>{0xF5, 0x12, 0x34, 0x56});
+        receiveRequest(4);
     }
 }
