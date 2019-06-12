@@ -87,11 +87,11 @@ void System::configClock(void)
 void System::config(void)
 {
     Timer::config();
+    pConsole = new Console;
+    pConsole->sendMessage(Severity::Info, "MiBot start");
     // SPI1 is used for bluetooth and eeprom
     pSpi1 = new SpiBus(SPI1);
     pEeprom = new Eeprom(SpiBus::pSpi1, GPIOA, GPIO_PIN_9);
-    pConsole = new Console;
-    pConsole->sendMessage(Severity::Info, "MiBot start");
     pRobot = new Robot;
 }
 
@@ -101,7 +101,7 @@ void System::config(void)
 void System::terminate(void)
 {
     delete pRobot;
-    delete pConsole;
     delete pEeprom;
     delete pSpi1;
+    delete pConsole;
 }
