@@ -24,6 +24,7 @@ public:
     void terminate(void);
     Console* getConsole(void) const { return pConsole; }
     Robot* getRobot(void) const { return pRobot; }
+    Eeprom* getEeprom(void) const { return pEeprom; }
 private:
     System();
     void configClock(void);

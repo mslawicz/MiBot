@@ -34,14 +34,14 @@ int main(void)
     // main loop
     while(1)
     {
-        if(ledTimer.elapsed(100000))
+        if(ledTimer.elapsed(500000))
         {
             led.toggle();
             ledTimer.reset();
-            //spiTestDevice.send(std::vector<uint8_t>{0x12, 0x34, 0x56});
         }
 
-        System::getInstance().getRobot()->getMems().test();
+        //System::getInstance().getRobot()->getMems().test();
+        //System::getInstance().getEeprom()->test();
 
         System::getInstance().getConsole()->handler();
     }
