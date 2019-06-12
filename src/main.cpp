@@ -40,8 +40,8 @@ int main(void)
             ledTimer.reset();
         }
 
-        //System::getInstance().getRobot()->getMems().test();
-        //System::getInstance().getEeprom()->test();
+        System::getInstance().getRobot()->getMems().test();
+        System::getInstance().getEeprom()->test();
 
         System::getInstance().getConsole()->handler();
     }

@@ -28,7 +28,7 @@ Gyroscope::Gyroscope(I2cBus* pBus, DeviceAddress deviceAddress) :
 
 void Mems::test(void)
 {
-    if(timer.elapsed(2000000))
+    if(timer.elapsed(12000))
     {
         timer.reset();
         gyroscope.readRequest(Lsm6dslRegister::WHO_AM_I, 1);
