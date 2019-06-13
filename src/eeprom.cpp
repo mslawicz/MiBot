@@ -22,10 +22,17 @@ Eeprom::~Eeprom()
 void Eeprom::test(void)
 {
     static Timer timer;
+    static uint8_t cnt = 0;
     if(timer.elapsed(10000))
     {
         timer.reset();
-        send(std::vector<uint8_t>{0xF5, 0x12, 0x34, 0x56});
-        //receiveRequest(4); //this cause the problem with I2C
+        if(++cnt & 0x04)
+        {
+            send(std::vector<uint8_t>{0xF5, 0x12, 0x34, 0x56});
+        }
+        else
+        {
+            receiveRequest(10);
+        }
     }
 }

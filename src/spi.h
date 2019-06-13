@@ -49,11 +49,4 @@ private:
     bool newDataReady;
 };
 
-// XXX SPI test device
-class TestDevice : public SpiDevice
-{
-public:
-    TestDevice(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS) : SpiDevice(pBus, portCS, pinCS) {}
-};
-
 #endif /* SPI_H_ */
