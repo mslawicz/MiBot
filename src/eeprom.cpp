@@ -36,7 +36,7 @@ void Eeprom::test(void)
         }
         else
         {
-            sendReceiveRequest(std::vector<uint8_t>{0xF6, 0x78, 0x9A, 0xBC});
+            sendReceiveRequest(std::vector<uint8_t>{0x03, 0x00, 0x10, 0x00, 0x00});
         }
     }
 }
