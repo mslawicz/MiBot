@@ -124,6 +124,26 @@ void SpiDevice::receiveRequest(uint16_t size)
     }
 }
 
+/*
+ * bidirectional transmit to/from SPI device
+ */
+void SpiDevice::sendReceiveRequest(std::vector<uint8_t> data)
+{
+    dataToSend = data;
+    receptionBuffer.assign(data.size(), 0);
+    chipSelect.write(GPIO_PinState::GPIO_PIN_RESET);
+    if(HAL_SPI_TransmitReceive_IT(pBus->getHandle(), &dataToSend[0], &receptionBuffer[0], data.size()) == HAL_OK)
+    {
+        pBus->markAsBusy();
+        pBus->pLastServedDevice = this;
+    }
+    else
+    {
+        // no reception started
+        chipSelect.write(GPIO_PinState::GPIO_PIN_SET);
+        pBus->pLastServedDevice = nullptr;
+    }
+}
 
 /**
   * @brief  Tx Transfer completed callback.
@@ -148,6 +168,22 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
   * @retval None
   */
 void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+    if(hspi->Instance == SPI1)
+    {
+        // mark this SPI bus as free
+        SpiBus::pSpi1->markAsFree();
+        SpiBus::pSpi1->markNewDataReady();
+    }
+}
+
+/**
+  * @brief  Tx and Rx Transfer completed callback.
+  * @param  hspi pointer to a SPI_HandleTypeDef structure that contains
+  *               the configuration information for SPI module.
+  * @retval None
+  */
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
 {
     if(hspi->Instance == SPI1)
     {

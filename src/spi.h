@@ -37,6 +37,7 @@ class SpiDevice
 public:
     void send(std::vector<uint8_t> data);
     void receiveRequest(uint16_t size);
+    void sendReceiveRequest(std::vector<uint8_t> data);
     friend SpiBus;
 protected:
     SpiDevice(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS);
