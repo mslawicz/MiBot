@@ -28,10 +28,19 @@ Gyroscope::Gyroscope(I2cBus* pBus, DeviceAddress deviceAddress) :
 
 void Mems::test(void)
 {
+    static bool rw = false;
     if(timer.elapsed(12000))
     {
         timer.reset();
-        gyroscope.readRequest(Lsm6dslRegister::WHO_AM_I, 1);
+        if(rw)
+        {
+            gyroscope.readRequest(Lsm6dslRegister::WHO_AM_I, 1 + rand() % 4);
+        }
+        else
+        {
+            gyroscope.write(0x73, std::vector<uint8_t>{0x12, 0x34});
+        }
+        rw = !rw;
     }
     if(gyroscope.isDataReady())
     {

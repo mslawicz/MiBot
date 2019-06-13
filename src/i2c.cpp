@@ -120,8 +120,8 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
     if(hi2c->Instance == I2C1)
     {
         // mark this I2C bus as free
-        System::getInstance().getRobot()->getMems().getBus().markAsFree();
-        System::getInstance().getRobot()->getMems().getBus().markNewDataReady();
+        I2cBus::pI2c1->markAsFree();
+        I2cBus::pI2c1->markNewDataReady();
     }
 }
 
