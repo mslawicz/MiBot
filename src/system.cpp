@@ -91,7 +91,7 @@ void System::config(void)
     pConsole->sendMessage(Severity::Info, "MiBot start");
     // SPI1 is used for bluetooth and eeprom
     pSpi1 = new SpiBus(SPI1);
-    pEeprom = new Eeprom(SpiBus::pSpi1, GPIOA, GPIO_PIN_9);
+    pEeprom = new Eeprom(SpiBus::pSpi1, EEPROM_CS_PORT, EEPROM_CS_PIN);
     pRobot = new Robot;
 }
 

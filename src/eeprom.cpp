@@ -23,7 +23,7 @@ void Eeprom::test(void)
 {
     static Timer timer;
     static uint8_t cnt = 0;
-    if(timer.elapsed(10000))
+    if(timer.elapsed(1000))
     {
         timer.reset();
         if(++cnt & 0x04)
@@ -36,7 +36,18 @@ void Eeprom::test(void)
         }
         else
         {
-            sendReceiveRequest(std::vector<uint8_t>{0x03, 0x00, 0x10, 0x00, 0x00});
+            read(0x0123, 6);
         }
     }
+}
+
+/*
+ * read memory content
+ */
+void Eeprom::read(uint16_t address, uint16_t size)
+{
+    std::vector<uint8_t> data = {0x03, static_cast<uint8_t>((address >> 8) & 0xFF), static_cast<uint8_t>(address & 0xFF)};
+    data.insert(data.end(), size, 0x00);
+    sendReceiveRequest(data);
+    //XXX should this metho return read data?
 }

@@ -12,6 +12,9 @@
 #include "gpio.h"
 #include <vector>
 
+#define EEPROM_CS_PORT GPIOA
+#define EEPROM_CS_PIN  GPIO_PIN_9
+
 class SpiDevice;
 
 class SpiBus

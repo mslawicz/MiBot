@@ -29,7 +29,7 @@ Gyroscope::Gyroscope(I2cBus* pBus, DeviceAddress deviceAddress) :
 void Mems::test(void)
 {
     static bool rw = false;
-    if(timer.elapsed(12000))
+    if(timer.elapsed(7700))
     {
         timer.reset();
         if(rw)

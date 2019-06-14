@@ -17,6 +17,7 @@ public:
     Eeprom(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS);
     ~Eeprom();
     void test(void);
+    void read(uint16_t address, uint16_t size);
 };
 
 #endif /* EEPROM_H_ */
