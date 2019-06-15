@@ -22,7 +22,7 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
         /* Peripheral clock enable */
         __HAL_RCC_I2C1_CLK_ENABLE();
         /* Peripheral interrupt init */
-        HAL_NVIC_SetPriority(I2C1_EV_IRQn, 8, 0);
+        HAL_NVIC_SetPriority(I2C1_EV_IRQn, 6, 0);
         HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
         pI2c1 = this;
         name = "I2C1";
