@@ -23,7 +23,7 @@ void Eeprom::test(void)
 {
     static Timer timer;
     static uint8_t cnt = 0;
-    if(timer.elapsed(1000))
+    if(timer.elapsed(1300))
     {
         timer.reset();
         if(++cnt & 0x04)
