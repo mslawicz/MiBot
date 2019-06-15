@@ -10,6 +10,7 @@
 
 #include "stm32f4xx_hal.h"
 #include <vector>
+#include <iostream>
 
 enum DeviceAddress
 {
@@ -34,6 +35,7 @@ private:
     I2C_HandleTypeDef hI2c;
     volatile bool busy;
     I2cDevice* pLastReadDevice;
+    std::string name;
 };
 
 class I2cDevice

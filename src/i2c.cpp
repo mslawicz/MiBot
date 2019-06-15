@@ -13,7 +13,6 @@ I2cBus* I2cBus::pI2c1 = nullptr;
 
 I2cBus::I2cBus(I2C_TypeDef* instance)
 {
-    std::string name;
     if(instance == I2C1)
     {
         // SCL pin
@@ -134,4 +133,15 @@ void I2cBus::markNewDataReady(void)
     {
         pLastReadDevice->newDataReady = true;
     }
+}
+
+/**
+  * @brief  I2C error callback.
+  * @param  hi2c Pointer to a I2C_HandleTypeDef structure that contains
+  *                the configuration information for the specified I2C.
+  * @retval None
+  */
+void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
+{
+    System::getInstance().getConsole()->sendMessage(Severity::Error, " I2C error code=" + std::to_string(HAL_I2C_GetError(hi2c)));
 }

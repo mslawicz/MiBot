@@ -203,3 +203,14 @@ void SpiBus::markNewDataReady(void)
         pLastServedDevice->newDataReady = true;
     }
 }
+
+/**
+  * @brief  SPI error callback.
+  * @param  hspi pointer to a SPI_HandleTypeDef structure that contains
+  *               the configuration information for SPI module.
+  * @retval None
+  */
+void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
+{
+    System::getInstance().getConsole()->sendMessage(Severity::Error, " SPI error code=" + std::to_string(HAL_SPI_GetError(hspi)));
+}
