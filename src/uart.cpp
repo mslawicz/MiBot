@@ -56,7 +56,7 @@ UART::UART(USART_TypeDef* instance, uint32_t baudRate) :
     {
         pUSART2 = &hUart;
         /* USART2 interrupt Init */
-        HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
+        HAL_NVIC_SetPriority(USART2_IRQn, 2, 0);
         HAL_NVIC_EnableIRQ(USART2_IRQn);
     }
     busy = false;

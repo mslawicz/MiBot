@@ -25,7 +25,7 @@ SpiBus::SpiBus(SPI_TypeDef* instance) :
         /* Peripheral clock enable */
         __HAL_RCC_SPI1_CLK_ENABLE();
         /* Peripheral interrupt init */
-        HAL_NVIC_SetPriority(SPI1_IRQn, 4, 0);
+        HAL_NVIC_SetPriority(SPI1_IRQn, 1, 1);
         HAL_NVIC_EnableIRQ(SPI1_IRQn);
         pSpi1 = this;
         name = "SPI1";

@@ -21,9 +21,18 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
         GPIO(GPIOB, GPIO_PIN_9, GPIO_MODE_AF_OD, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF4_I2C1);
         /* Peripheral clock enable */
         __HAL_RCC_I2C1_CLK_ENABLE();
+        /* DMA controller clock enable */
+        __HAL_RCC_DMA1_CLK_ENABLE();
         /* Peripheral interrupt init */
         HAL_NVIC_SetPriority(I2C1_EV_IRQn, 5, 0);
         HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
+        /* DMA interrupt init */
+        /* DMA1_Stream0_IRQn interrupt configuration */
+        HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
+        HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
+        /* DMA1_Stream6_IRQn interrupt configuration */
+        HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
+        HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
         pI2c1 = this;
         name = "I2C1";
     }
