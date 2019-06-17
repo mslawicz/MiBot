@@ -25,6 +25,8 @@ public:
     I2cBus(I2C_TypeDef* instance);
     ~I2cBus();
     I2C_HandleTypeDef* getHandle(void) const { return const_cast<__I2C_HandleTypeDef*>(&hI2c); }
+    DMA_HandleTypeDef* getDmaTxHandle(void) const { return const_cast<DMA_HandleTypeDef*>(&hDmaI2c1Tx); }
+    DMA_HandleTypeDef* getDmaRxHandle(void) const { return const_cast<DMA_HandleTypeDef*>(&hDmaI2c1Rx); }
     void markAsBusy(void) { busy = true; }
     void markAsFree(void) { busy = false; }
     bool isBusy(void) const { return busy; }
