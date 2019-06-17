@@ -127,7 +127,9 @@ void EXTI0_IRQHandler(void)
   */
 void DMA1_Stream0_IRQHandler(void)
 {
+    testPin.write(GPIO_PinState::GPIO_PIN_SET);//XXX
   HAL_DMA_IRQHandler(I2cBus::pI2c1->getDmaRxHandle());
+  testPin.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
 }
 
 /**
@@ -135,7 +137,9 @@ void DMA1_Stream0_IRQHandler(void)
   */
 void DMA1_Stream6_IRQHandler(void)
 {
+    testPin.write(GPIO_PinState::GPIO_PIN_SET);//XXX
   HAL_DMA_IRQHandler(I2cBus::pI2c1->getDmaTxHandle());
+  testPin.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
 }
 
 /**
