@@ -36,6 +36,8 @@ private:
     volatile bool busy;
     I2cDevice* pLastReadDevice;
     std::string name;
+    DMA_HandleTypeDef hDmaI2c1Tx;
+    DMA_HandleTypeDef hDmaI2c1Rx;
 };
 
 class I2cDevice

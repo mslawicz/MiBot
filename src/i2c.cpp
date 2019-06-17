@@ -24,15 +24,52 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
         /* DMA controller clock enable */
         __HAL_RCC_DMA1_CLK_ENABLE();
         /* Peripheral interrupt init */
-        HAL_NVIC_SetPriority(I2C1_EV_IRQn, 5, 0);
+        HAL_NVIC_SetPriority(I2C1_EV_IRQn, 1, 0);
         HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
         /* DMA interrupt init */
         /* DMA1_Stream0_IRQn interrupt configuration */
         HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
         HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
         /* DMA1_Stream6_IRQn interrupt configuration */
+
         HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
         HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
+
+        /* Peripheral DMA init*/
+
+        hDmaI2c1Tx.Instance = DMA1_Stream6;
+        hDmaI2c1Tx.Init.Channel = DMA_CHANNEL_1;
+        hDmaI2c1Tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+        hDmaI2c1Tx.Init.PeriphInc = DMA_PINC_DISABLE;
+        hDmaI2c1Tx.Init.MemInc = DMA_MINC_ENABLE;
+        hDmaI2c1Tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+        hDmaI2c1Tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+        hDmaI2c1Tx.Init.Mode = DMA_NORMAL;
+        hDmaI2c1Tx.Init.Priority = DMA_PRIORITY_LOW;
+        hDmaI2c1Tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+        if (HAL_DMA_Init(&hDmaI2c1Tx) != HAL_OK)
+        {
+            System::getInstance().getConsole()->sendMessage(Severity::Error, name + " TX DMA failed");
+        }
+        __HAL_LINKDMA(&hI2c,hdmatx,hDmaI2c1Tx);
+
+        hDmaI2c1Rx.Instance = DMA1_Stream0;
+        hDmaI2c1Rx.Init.Channel = DMA_CHANNEL_1;
+        hDmaI2c1Rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+        hDmaI2c1Rx.Init.PeriphInc = DMA_PINC_DISABLE;
+        hDmaI2c1Rx.Init.MemInc = DMA_MINC_ENABLE;
+        hDmaI2c1Rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+        hDmaI2c1Rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+        hDmaI2c1Rx.Init.Mode = DMA_NORMAL;
+        hDmaI2c1Rx.Init.Priority = DMA_PRIORITY_LOW;
+        hDmaI2c1Rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+        if (HAL_DMA_Init(&hDmaI2c1Rx) != HAL_OK)
+        {
+            System::getInstance().getConsole()->sendMessage(Severity::Error, name + "  RX DMA failed");
+        }
+
+        __HAL_LINKDMA(&hI2c,hdmarx,hDmaI2c1Rx);
+
         pI2c1 = this;
         name = "I2C1";
     }
