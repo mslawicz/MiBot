@@ -19,6 +19,9 @@
 #include "i2c.h"
 #include "spi.h"
 
+#include "gpio.h"
+extern GPIO testPin;
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -124,7 +127,9 @@ void EXTI0_IRQHandler(void)
   */
 void I2C1_EV_IRQHandler(void)
 {
+    testPin.write(GPIO_PinState::GPIO_PIN_SET);//XXX
   HAL_I2C_EV_IRQHandler(I2cBus::pI2c1->getHandle());
+  testPin.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
 }
 
 /**
