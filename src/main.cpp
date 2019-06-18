@@ -15,7 +15,8 @@
 #include "gpio.h"
 #include "timer.h"
 
-GPIO testPin(GPIOC, GPIO_PIN_9, GPIO_MODE_OUTPUT_PP); //XXX
+GPIO testPin1(GPIOC, GPIO_PIN_9, GPIO_MODE_OUTPUT_PP); //XXX
+GPIO testPin2(GPIOB, GPIO_PIN_1, GPIO_MODE_OUTPUT_PP); //XXX
 
 int main(void)
 {

@@ -19,8 +19,6 @@
 #include "i2c.h"
 #include "spi.h"
 
-#include "gpio.h"
-extern GPIO testPin;
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -124,32 +122,29 @@ void EXTI0_IRQHandler(void)
 
 /**
   * @brief This function handles DMA1 stream0 global interrupt.
+  * it is called after completed reception
   */
 void DMA1_Stream0_IRQHandler(void)
 {
-    testPin.write(GPIO_PinState::GPIO_PIN_SET);//XXX
-  HAL_DMA_IRQHandler(I2cBus::pI2c1->getDmaRxHandle());
-  testPin.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
+    HAL_DMA_IRQHandler(I2cBus::pI2c1->getDmaRxHandle());
 }
 
 /**
   * @brief This function handles DMA1 stream6 global interrupt.
+  * it is called two bytes before completed transmission
   */
 void DMA1_Stream6_IRQHandler(void)
 {
-    testPin.write(GPIO_PinState::GPIO_PIN_SET);//XXX
-  HAL_DMA_IRQHandler(I2cBus::pI2c1->getDmaTxHandle());
-  testPin.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
+    HAL_DMA_IRQHandler(I2cBus::pI2c1->getDmaTxHandle());
 }
 
 /**
   * @brief This function handles I2C1 event interrupt.
+  * in DMA mode it is called after completed transmission
   */
 void I2C1_EV_IRQHandler(void)
 {
-    testPin.write(GPIO_PinState::GPIO_PIN_SET);//XXX
-  HAL_I2C_EV_IRQHandler(I2cBus::pI2c1->getHandle());
-  testPin.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
+    HAL_I2C_EV_IRQHandler(I2cBus::pI2c1->getHandle());
 }
 
 /**
