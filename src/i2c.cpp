@@ -10,7 +10,6 @@
 #include "system.h"
 
 I2cBus* I2cBus::pI2c1 = nullptr;
-extern GPIO testPin1, testPin2;//XXX
 
 I2cBus::I2cBus(I2C_TypeDef* instance)
 {
@@ -101,7 +100,6 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
 
 I2cBus::~I2cBus()
 {
-    // TODO Auto-generated destructor stub
 }
 
 I2cDevice::I2cDevice(I2cBus* pBus, DeviceAddress deviceAddress) :
@@ -137,11 +135,8 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
     if(hi2c->Instance == I2C1)
     {
-        testPin1.write(GPIO_PinState::GPIO_PIN_SET);//XXX
-
         // mark this I2C bus as free
         I2cBus::pI2c1->markAsFree();
-        testPin1.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
     }
 }
 
@@ -168,11 +163,9 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
     if(hi2c->Instance == I2C1)
     {
-        testPin2.write(GPIO_PinState::GPIO_PIN_SET);//XXX
         // mark this I2C bus as free
         I2cBus::pI2c1->markAsFree();
         I2cBus::pI2c1->markNewDataReady();
-        testPin2.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
     }
 }
 
