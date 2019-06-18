@@ -28,7 +28,7 @@ void Eeprom::test(void)
         timer.reset();
         if(++cnt & 0x04)
         {
-            send(std::vector<uint8_t>{0xF5, 0x12, 0x34, 0x56});
+            send(std::vector<uint8_t>{0xF5, 0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc , 0xde});
         }
         else if(cnt & 0x02)
         {

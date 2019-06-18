@@ -19,6 +19,8 @@
 #include "i2c.h"
 #include "spi.h"
 
+#include "gpio.h"//XXX
+extern GPIO testPin1, testPin2;//XXX
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -122,7 +124,7 @@ void EXTI0_IRQHandler(void)
 
 /**
   * @brief This function handles DMA1 stream0 global interrupt.
-  * it is called after completed reception
+  * it is called after completed I2C reception
   */
 void DMA1_Stream0_IRQHandler(void)
 {
@@ -131,7 +133,7 @@ void DMA1_Stream0_IRQHandler(void)
 
 /**
   * @brief This function handles DMA1 stream6 global interrupt.
-  * it is called two bytes before completed transmission
+  * it is called two bytes before completed I2C transmission
   */
 void DMA1_Stream6_IRQHandler(void)
 {
@@ -160,5 +162,7 @@ void USART2_IRQHandler(void)
   */
 void SPI1_IRQHandler(void)
 {
-  HAL_SPI_IRQHandler(SpiBus::pSpi1->getHandle());
+    testPin1.write(GPIO_PinState::GPIO_PIN_SET);//XXX
+    HAL_SPI_IRQHandler(SpiBus::pSpi1->getHandle());
+    testPin1.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
 }
