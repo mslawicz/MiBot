@@ -23,6 +23,8 @@ public:
     SpiBus(SPI_TypeDef* instance);
     ~SpiBus();
     SPI_HandleTypeDef* getHandle(void) const { return const_cast<__SPI_HandleTypeDef*>(&hSpi); }
+    DMA_HandleTypeDef* getDmaRxHandle(void) const { return const_cast<DMA_HandleTypeDef*>(&hDmaSpi1Rx); }
+    DMA_HandleTypeDef* getDmaTxHandle(void) const { return const_cast<DMA_HandleTypeDef*>(&hDmaSpi1Tx); }
     void markAsBusy(void) { busy = true; }
     void markAsFree(void);
     void markNewDataReady(void);

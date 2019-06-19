@@ -166,3 +166,19 @@ void SPI1_IRQHandler(void)
     HAL_SPI_IRQHandler(SpiBus::pSpi1->getHandle());
     testPin1.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
 }
+
+/**
+  * @brief This function handles DMA2 stream0 global interrupt.
+  */
+void DMA2_Stream0_IRQHandler(void)
+{
+    HAL_DMA_IRQHandler(SpiBus::pSpi1->getDmaRxHandle());
+}
+
+/**
+  * @brief This function handles DMA2 stream3 global interrupt.
+  */
+void DMA2_Stream3_IRQHandler(void)
+{
+    HAL_DMA_IRQHandler(SpiBus::pSpi1->getDmaTxHandle());
+}
