@@ -10,6 +10,9 @@
 
 SpiBus* SpiBus::pSpi1 = nullptr;
 
+#include "gpio.h"//XXX
+extern GPIO testPin1, testPin2;//XXX
+
 SpiBus::SpiBus(SPI_TypeDef* instance) :
     instance(instance)
 {
@@ -135,7 +138,7 @@ void SpiDevice::send(std::vector<uint8_t> data)
 {
     dataToSend = data;
     chipSelect.write(GPIO_PinState::GPIO_PIN_RESET);
-    if(HAL_SPI_Transmit_IT(pBus->getHandle(), &dataToSend[0], dataToSend.size()) == HAL_OK)
+    if(HAL_SPI_Transmit_DMA(pBus->getHandle(), &dataToSend[0], dataToSend.size()) == HAL_OK)
     {
         pBus->markAsBusy();
         pBus->pLastServedDevice = this;
@@ -155,7 +158,7 @@ void SpiDevice::receiveRequest(uint16_t size)
 {
     receptionBuffer.assign(size, 0);
     chipSelect.write(GPIO_PinState::GPIO_PIN_RESET);
-    if(HAL_SPI_Receive_IT(pBus->getHandle(), &receptionBuffer[0], size) == HAL_OK)
+    if(HAL_SPI_Receive_DMA(pBus->getHandle(), &receptionBuffer[0], size) == HAL_OK)
     {
         pBus->markAsBusy();
         pBus->pLastServedDevice = this;
@@ -176,7 +179,7 @@ void SpiDevice::sendReceiveRequest(std::vector<uint8_t> data)
     dataToSend = data;
     receptionBuffer.assign(data.size(), 0);
     chipSelect.write(GPIO_PinState::GPIO_PIN_RESET);
-    if(HAL_SPI_TransmitReceive_IT(pBus->getHandle(), &dataToSend[0], &receptionBuffer[0], data.size()) == HAL_OK)
+    if(HAL_SPI_TransmitReceive_DMA(pBus->getHandle(), &dataToSend[0], &receptionBuffer[0], data.size()) == HAL_OK)
     {
         pBus->markAsBusy();
         pBus->pLastServedDevice = this;
@@ -197,11 +200,13 @@ void SpiDevice::sendReceiveRequest(std::vector<uint8_t> data)
   */
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
+    testPin1.write(GPIO_PinState::GPIO_PIN_SET);//XXX
     if(hspi->Instance == SPI1)
     {
         // mark this SPI bus as free
         SpiBus::pSpi1->markAsFree();
     }
+    testPin1.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
 }
 
 
@@ -213,12 +218,14 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
   */
 void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
 {
+    testPin2.write(GPIO_PinState::GPIO_PIN_SET);//XXX
     if(hspi->Instance == SPI1)
     {
         // mark this SPI bus as free
         SpiBus::pSpi1->markAsFree();
         SpiBus::pSpi1->markNewDataReady();
     }
+    testPin2.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
 }
 
 /**
@@ -229,12 +236,16 @@ void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
   */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
 {
+    testPin1.write(GPIO_PinState::GPIO_PIN_SET);//XXX
+    testPin2.write(GPIO_PinState::GPIO_PIN_SET);//XXX
     if(hspi->Instance == SPI1)
     {
         // mark this SPI bus as free
         SpiBus::pSpi1->markAsFree();
         SpiBus::pSpi1->markNewDataReady();
     }
+    testPin1.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
+    testPin2.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
 }
 
 /*

@@ -19,9 +19,6 @@
 #include "i2c.h"
 #include "spi.h"
 
-#include "gpio.h"//XXX
-extern GPIO testPin1, testPin2;//XXX
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -162,9 +159,7 @@ void USART2_IRQHandler(void)
   */
 void SPI1_IRQHandler(void)
 {
-    testPin1.write(GPIO_PinState::GPIO_PIN_SET);//XXX
     HAL_SPI_IRQHandler(SpiBus::pSpi1->getHandle());
-    testPin1.write(GPIO_PinState::GPIO_PIN_RESET);//XXX
 }
 
 /**
