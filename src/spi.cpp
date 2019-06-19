@@ -16,6 +16,8 @@ SpiBus::SpiBus(SPI_TypeDef* instance) :
     std::string name;
     if(instance == SPI1)
     {
+        name = "SPI1";
+
         // MISO pin
         GPIO(GPIOA, GPIO_PIN_6, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF5_SPI1);
         // MOSI pin
@@ -27,8 +29,50 @@ SpiBus::SpiBus(SPI_TypeDef* instance) :
         /* Peripheral interrupt init */
         HAL_NVIC_SetPriority(SPI1_IRQn, 1, 1);
         HAL_NVIC_EnableIRQ(SPI1_IRQn);
+
+        /* DMA interrupt init */
+        /* DMA2_Stream0_IRQn interrupt configuration */
+        HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
+        HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+        /* DMA2_Stream3_IRQn interrupt configuration */
+        HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 0, 0);
+        HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
+
+        /* SPI1_RX Init */
+        hDmaSpi1Rx.Instance = DMA2_Stream0;
+        hDmaSpi1Rx.Init.Channel = DMA_CHANNEL_3;
+        hDmaSpi1Rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+        hDmaSpi1Rx.Init.PeriphInc = DMA_PINC_DISABLE;
+        hDmaSpi1Rx.Init.MemInc = DMA_MINC_ENABLE;
+        hDmaSpi1Rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+        hDmaSpi1Rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+        hDmaSpi1Rx.Init.Mode = DMA_NORMAL;
+        hDmaSpi1Rx.Init.Priority = DMA_PRIORITY_LOW;
+        hDmaSpi1Rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+        if (HAL_DMA_Init(&hDmaSpi1Rx) != HAL_OK)
+        {
+            System::getInstance().getConsole()->sendMessage(Severity::Error, name + " RX DMA initialization failed");
+        }
+        __HAL_LINKDMA(&hSpi,hdmarx,hDmaSpi1Rx);
+
+        /* SPI1_TX Init */
+        hDmaSpi1Tx.Instance = DMA2_Stream3;
+        hDmaSpi1Tx.Init.Channel = DMA_CHANNEL_3;
+        hDmaSpi1Tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+        hDmaSpi1Tx.Init.PeriphInc = DMA_PINC_DISABLE;
+        hDmaSpi1Tx.Init.MemInc = DMA_MINC_ENABLE;
+        hDmaSpi1Tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+        hDmaSpi1Tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+        hDmaSpi1Tx.Init.Mode = DMA_NORMAL;
+        hDmaSpi1Tx.Init.Priority = DMA_PRIORITY_LOW;
+        hDmaSpi1Tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+        if (HAL_DMA_Init(&hDmaSpi1Tx) != HAL_OK)
+        {
+            System::getInstance().getConsole()->sendMessage(Severity::Error, name + " TX DMA initialization failed");
+        }
+        __HAL_LINKDMA(&hSpi,hdmatx,hDmaSpi1Tx);
+
         pSpi1 = this;
-        name = "SPI1";
     }
     hSpi.Instance = instance;
     hSpi.Init.Mode = SPI_MODE_MASTER;

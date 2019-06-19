@@ -15,6 +15,8 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
 {
     if(instance == I2C1)
     {
+        name = "I2C1";
+
         // SCL pin
         GPIO(GPIOB, GPIO_PIN_8, GPIO_MODE_AF_OD, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF4_I2C1);
         // SDA pin
@@ -24,12 +26,12 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
         /* Peripheral interrupt init */
         HAL_NVIC_SetPriority(I2C1_EV_IRQn, 1, 0);
         HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
+
         /* DMA interrupt init */
         /* DMA1_Stream0_IRQn interrupt configuration */
         HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
         HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
         /* DMA1_Stream6_IRQn interrupt configuration */
-
         HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
         HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
 
@@ -47,7 +49,7 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
         hDmaI2c1Tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
         if (HAL_DMA_Init(&hDmaI2c1Tx) != HAL_OK)
         {
-            System::getInstance().getConsole()->sendMessage(Severity::Error, name + " TX DMA failed");
+            System::getInstance().getConsole()->sendMessage(Severity::Error, name + " TX DMA initialization failed");
         }
         __HAL_LINKDMA(&hI2c,hdmatx,hDmaI2c1Tx);
 
@@ -63,13 +65,12 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
         hDmaI2c1Rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
         if (HAL_DMA_Init(&hDmaI2c1Rx) != HAL_OK)
         {
-            System::getInstance().getConsole()->sendMessage(Severity::Error, name + "  RX DMA failed");
+            System::getInstance().getConsole()->sendMessage(Severity::Error, name + "  RX DMA initialization failed");
         }
 
         __HAL_LINKDMA(&hI2c,hdmarx,hDmaI2c1Rx);
 
         pI2c1 = this;
-        name = "I2C1";
     }
     hI2c.Instance = instance;
     hI2c.Init.ClockSpeed = 400000;
