@@ -33,6 +33,8 @@ private:
     SPI_TypeDef* instance;
     bool busy;      // true if SPI bus is busy
     SpiDevice* pLastServedDevice;
+    DMA_HandleTypeDef hDmaSpi1Rx;
+    DMA_HandleTypeDef hDmaSpi1Tx;
 };
 
 class SpiDevice
