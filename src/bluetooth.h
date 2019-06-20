@@ -8,11 +8,20 @@
 #ifndef BLUETOOTH_H_
 #define BLUETOOTH_H_
 
+
+enum BluetoothStates
+{
+    BTSM_start
+};
+
 class Bluetooth
 {
 public:
     Bluetooth();
     ~Bluetooth();
+    void handler(void);
+private:
+    BluetoothStates state;
 };
 
 #endif /* BLUETOOTH_H_ */

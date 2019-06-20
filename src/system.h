@@ -13,6 +13,7 @@
 #include "robot.h"
 #include "spi.h"
 #include "eeprom.h"
+#include "bluetooth.h"
 
 class System
 {
@@ -25,6 +26,7 @@ public:
     Console* getConsole(void) const { return pConsole; }
     Robot* getRobot(void) const { return pRobot; }
     Eeprom* getEeprom(void) const { return pEeprom; }
+    Bluetooth* getBluetooth(void) const { return pBluetooth; }
 private:
     System();
     void configClock(void);
@@ -32,6 +34,7 @@ private:
     Eeprom* pEeprom;
     Console* pConsole;
     Robot* pRobot;
+    Bluetooth* pBluetooth;
 };
 
 #endif /* SYSTEM_H_ */

@@ -96,6 +96,7 @@ void System::config(void)
     // SPI1 is used for bluetooth and eeprom
     pSpi1 = new SpiBus(SPI1);
     pEeprom = new Eeprom(SpiBus::pSpi1, EEPROM_CS_PORT, EEPROM_CS_PIN);
+    pBluetooth = new Bluetooth;
     pRobot = new Robot;
 }
 
@@ -105,6 +106,7 @@ void System::config(void)
 void System::terminate(void)
 {
     delete pRobot;
+    delete pBluetooth;
     delete pEeprom;
     delete pSpi1;
     delete pConsole;

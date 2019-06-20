@@ -24,8 +24,8 @@ int main(void)
 
     GPIO pushbutton(USER_BUTTON_GPIO_PORT, USER_BUTTON_PIN, GPIO_MODE_INPUT, GPIO_PULLUP);
     GPIO led(LED2_GPIO_PORT, LED2_PIN, GPIO_MODE_OUTPUT_PP);
-
     Timer ledTimer;
+
     // start reception of the first character
     System::getInstance().getConsole()->getInterface().startReception();
 
@@ -45,6 +45,7 @@ int main(void)
         System::getInstance().getEeprom()->test();
 
         System::getInstance().getConsole()->handler();
+        System::getInstance().getBluetooth()->handler();
     }
 
     System::getInstance().terminate();

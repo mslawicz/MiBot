@@ -9,8 +9,7 @@
 
 Bluetooth::Bluetooth()
 {
-    // TODO Auto-generated constructor stub
-
+    state = BluetoothStates::BTSM_start;
 }
 
 Bluetooth::~Bluetooth()
@@ -18,3 +17,17 @@ Bluetooth::~Bluetooth()
     // TODO Auto-generated destructor stub
 }
 
+/*
+ * Bluetooth handler
+ * state machine to be executed periodically in a loop
+ */
+void Bluetooth::handler(void)
+{
+    switch(state)
+    {
+    case BTSM_start:
+        break;
+    default:
+        break;
+    }
+}
