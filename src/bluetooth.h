@@ -11,7 +11,9 @@
 
 enum BluetoothStates
 {
-    BTSM_start
+    BTS_start,
+    BTS_hciInit,
+    BTS_afterHciInit
 };
 
 class Bluetooth
@@ -20,6 +22,7 @@ public:
     Bluetooth();
     ~Bluetooth();
     void handler(void);
+    void userNotify(void* pData) {}
 private:
     BluetoothStates state;
 };

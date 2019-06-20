@@ -6,10 +6,11 @@
  */
 
 #include "bluetooth.h"
+#include "hci.h"
 
 Bluetooth::Bluetooth()
 {
-    state = BluetoothStates::BTSM_start;
+    state = BluetoothStates::BTS_start;
 }
 
 Bluetooth::~Bluetooth()
@@ -25,7 +26,12 @@ void Bluetooth::handler(void)
 {
     switch(state)
     {
-    case BTSM_start:
+    case BTS_start:
+        state = BTS_hciInit;
+        break;
+    case BTS_hciInit:
+        hci_init(userNotify, nullptr);
+        state = BTS_afterHciInit;
         break;
     default:
         break;
