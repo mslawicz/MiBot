@@ -22,7 +22,7 @@ public:
     Bluetooth();
     ~Bluetooth();
     void handler(void);
-    void userNotify(void* pData) {}
+    static void userNotify(void* pData) {}
 private:
     BluetoothStates state;
 };
