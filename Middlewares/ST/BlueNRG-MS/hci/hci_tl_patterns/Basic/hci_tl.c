@@ -44,6 +44,10 @@
   *
   ******************************************************************************
 */ 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "hci_const.h"
 #include "hci.h"
 #include "hci_tl.h"
@@ -51,6 +55,7 @@
 #define HCI_LOG_ON                      0
 #define HCI_PCK_TYPE_OFFSET             0
 #define EVENT_PARAMETER_TOT_LEN_OFFSET  2
+
 
 /**
  * Increase this parameter to overcome possible issues due to BLE devices crowded environment 
@@ -380,4 +385,7 @@ int32_t hci_notify_asynch_evt(void* pdata)
 
 }
 
+#ifdef __cplusplus
+}
+#endif
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

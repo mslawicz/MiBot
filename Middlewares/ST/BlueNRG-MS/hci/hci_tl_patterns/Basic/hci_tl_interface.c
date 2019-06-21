@@ -1,13 +1,15 @@
 /**
-******************************************************************************
-* @file    hci.h
-* @author  AMG RF FW team
-* @version V1.1.0
-* @date    18-July-2016
-* @brief   Header file for framework required for handling HCI interface
-******************************************************************************
+  ******************************************************************************
+  * @file    hci_tl_interface_template.c
+  * @brief 
+  ******************************************************************************
+  * This notice applies to any and all portions of this file
+  * that are not between comment pairs USER CODE BEGIN and
+  * USER CODE END. Other portions of this file, whether 
+  * inserted by the user or by software development tools
+  * are owned by their respective copyright owners.
   *
-  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics</center></h2>
+  * Copyright (c) 2018 STMicroelectronics International N.V. 
   * All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -43,66 +45,48 @@
   *
   ******************************************************************************
 */
-#ifndef __HCI_H_
-#define __HCI_H_
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "bluenrg_types.h"
+#ifdef HCI_TL
+#include "hci_tl.h"
+#endif
+#include "hci_tl_interface.h"
+ 
+void hci_tl_lowlevel_init(void)
+{
+#ifdef HCI_TL
+  tHciIO fops;  
+  
+  /* USER CODE BEGIN hci_tl_lowlevel_init 1 */
+  /* Register IO bus services */
+  
+  /* USER CODE END hci_tl_lowlevel_init 1 */
+  
+  hci_register_io_bus(&fops);
+  
+  /* USER CODE BEGIN hci_tl_lowlevel_init 2 */
+  /* Register event irq handler */
+  
+  /* USER CODE END hci_tl_lowlevel_init 2 */
 
-/** 
- * @addtogroup HIGH_LEVEL_INTERFACE HIGH_LEVEL_INTERFACE
- * @{
- */
+#endif
+  /* USER CODE BEGIN hci_tl_lowlevel_init 3 */
+  
+  /* USER CODE END hci_tl_lowlevel_init 3 */
+}
 
-/**
- * @defgroup HCI_TL HCI_TL
- * @{
- */
+void hci_tl_lowlevel_isr(void)
+{
+  /* USER CODE BEGIN hci_tl_lowlevel_isr */
+  /* Call hci_notify_asynch_evt() */
+  
+  /* USER CODE END hci_tl_lowlevel_isr */
+}
 
-/** 
- * @defgroup HCI_TL_functions HCI_TL functions
- * @{
- */
-
-/**
- * @brief Initialize the Host Controller Interface. 
- *        This function must be called before any data can be received 
- *        from BLE controller.
- *
- * @param  pData: ACI events callback function pointer
- *         This callback is triggered when an user event is received from 
- *         the BLE core device. 
- * @param  pConf: Configuration structure pointer
- * @retval None
- */
-void hci_init(void(* UserEvtRx)(void* pData), void* pConf);
-
-/**
- * @brief  Processing function that must be called after an event is received from
- *         HCI interface. 
- *         It must be called outside ISR. It will call user_notify() if necessary.
- *
- * @param  None
- * @retval None
- */ 
-void hci_user_evt_proc(void);
-
-/**
- * @}
- */
-
-/**
- * @}
- */ 
-
-/**
- * @}
- */  
 #ifdef __cplusplus
 }
 #endif
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 
-#endif /* __HCI_H_ */
