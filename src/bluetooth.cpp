@@ -33,7 +33,7 @@ void Bluetooth::handler(void)
         break;
     case BTS_hciInit:
         //hci_init(Bluetooth::userNotify, nullptr);
-        hci_init(fn, nullptr);
+        //hci_init(fn, nullptr);
         state = BTS_afterHciInit;
         break;
     case BTS_afterHciInit:
