@@ -42,7 +42,6 @@ int main(void)
         }
 
         System::getInstance().getRobot()->getMems().test();
-        System::getInstance().getEeprom()->test();
 
         System::getInstance().getConsole()->handler();
         System::getInstance().getBluetooth()->handler();
