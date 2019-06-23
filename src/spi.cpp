@@ -121,7 +121,8 @@ SpiDevice::SpiDevice(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS) :
         pBus(pBus),
         chipSelect(portCS, pinCS, GPIO_MODE_OUTPUT_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH)
 {
-    System::getInstance().getConsole()->sendMessage(Severity::Info, "SPI device created");
+    System::getInstance().getConsole()->sendMessage(Severity::Info, "SPI device created, CS=" + Console::toHex(reinterpret_cast<uint32_t>(portCS)) + "/" + Console::toHex(pinCS));
+
     chipSelect.write(GPIO_PinState::GPIO_PIN_SET);
     newDataReady = false;
 }
