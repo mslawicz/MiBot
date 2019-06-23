@@ -10,11 +10,12 @@
 Bluetooth::Bluetooth()
 {
     state = BluetoothStates::BTS_start;
+    pHci = new HCI(SpiBus::pSpi1, BLUETOOTH_CS_PORT, BLUETOOTH_CS_PIN);
 }
 
 Bluetooth::~Bluetooth()
 {
-    // TODO Auto-generated destructor stub
+    delete pHci;
 }
 
 /*

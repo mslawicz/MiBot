@@ -14,6 +14,8 @@
 
 #define EEPROM_CS_PORT GPIOA
 #define EEPROM_CS_PIN  GPIO_PIN_9
+#define BLUETOOTH_CS_PORT GPIOA
+#define BLUETOOTH_CS_PIN  GPIO_PIN_1
 
 class SpiDevice;
 
