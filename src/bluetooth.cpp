@@ -9,7 +9,7 @@
 
 Bluetooth::Bluetooth()
 {
-    state = BluetoothStates::BTSM_start;
+    state = BluetoothStates::BTS_start;
 }
 
 Bluetooth::~Bluetooth()
@@ -25,7 +25,7 @@ void Bluetooth::handler(void)
 {
     switch(state)
     {
-    case BTSM_start:
+    case BTS_start:
         break;
     default:
         break;
