@@ -47,9 +47,11 @@ public:
     void send(std::vector<uint8_t> data);
     void receiveRequest(uint16_t size);
     void sendReceiveRequest(std::vector<uint8_t> data);
+    void select(void) { chipSelect.write(GPIO_PinState::GPIO_PIN_RESET); }
+    void unselect(void) { chipSelect.write(GPIO_PinState::GPIO_PIN_SET); }
     friend SpiBus;
 protected:
-    SpiDevice(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS);
+    SpiDevice(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS, bool autoCS = true);
     virtual ~SpiDevice();
 private:
     SpiBus* pBus;       // SPI bus for this device
@@ -57,6 +59,7 @@ private:
     std::vector<uint8_t> receptionBuffer;    // vector of data being received
     GPIO chipSelect;
     bool newDataReady;
+    bool autoCS;
 };
 
 #endif /* SPI_H_ */

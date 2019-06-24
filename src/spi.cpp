@@ -109,7 +109,7 @@ SpiBus::~SpiBus()
 void SpiBus::markAsFree(void)
 {
     busy = false;
-    if(pLastServedDevice != nullptr)
+    if((pLastServedDevice != nullptr) && (pLastServedDevice->autoCS))
     {
         // current served device chip select inactive
         pLastServedDevice->chipSelect.write(GPIO_PinState::GPIO_PIN_SET);
@@ -117,9 +117,10 @@ void SpiBus::markAsFree(void)
 }
 
 
-SpiDevice::SpiDevice(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS) :
+SpiDevice::SpiDevice(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS, bool autoCS) :
         pBus(pBus),
-        chipSelect(portCS, pinCS, GPIO_MODE_OUTPUT_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH)
+        chipSelect(portCS, pinCS, GPIO_MODE_OUTPUT_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH),
+        autoCS(autoCS)
 {
     System::getInstance().getConsole()->sendMessage(Severity::Info, "SPI device created, CS=" + Console::toHex(reinterpret_cast<uint32_t>(portCS)) + "/" + Console::toHex(pinCS));
 
@@ -135,7 +136,10 @@ SpiDevice::~SpiDevice() {}
 void SpiDevice::send(std::vector<uint8_t> data)
 {
     dataToSend = data;
-    chipSelect.write(GPIO_PinState::GPIO_PIN_RESET);
+    if(autoCS)
+    {
+        chipSelect.write(GPIO_PinState::GPIO_PIN_RESET);
+    }
     if(HAL_SPI_Transmit_DMA(pBus->getHandle(), &dataToSend[0], dataToSend.size()) == HAL_OK)
     {
         pBus->markAsBusy();
@@ -155,7 +159,10 @@ void SpiDevice::send(std::vector<uint8_t> data)
 void SpiDevice::receiveRequest(uint16_t size)
 {
     receptionBuffer.assign(size, 0);
-    chipSelect.write(GPIO_PinState::GPIO_PIN_RESET);
+    if(autoCS)
+    {
+        chipSelect.write(GPIO_PinState::GPIO_PIN_RESET);
+    }
     if(HAL_SPI_Receive_DMA(pBus->getHandle(), &receptionBuffer[0], size) == HAL_OK)
     {
         pBus->markAsBusy();
@@ -176,7 +183,10 @@ void SpiDevice::sendReceiveRequest(std::vector<uint8_t> data)
 {
     dataToSend = data;
     receptionBuffer.assign(data.size(), 0);
-    chipSelect.write(GPIO_PinState::GPIO_PIN_RESET);
+    if(autoCS)
+    {
+        chipSelect.write(GPIO_PinState::GPIO_PIN_RESET);
+    }
     if(HAL_SPI_TransmitReceive_DMA(pBus->getHandle(), &dataToSend[0], &receptionBuffer[0], data.size()) == HAL_OK)
     {
         pBus->markAsBusy();
