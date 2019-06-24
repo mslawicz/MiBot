@@ -20,12 +20,10 @@ HCI::~HCI()
 }
 
 /*
- * send HCI command to bluetooth device
+ * HCI state machine to handle SPI transactions
+ * to be executed periodically in a loop
  */
-void HCI::sendCommand(uint16_t ogf, uint16_t ocf, std::vector<uint8_t>data)
+void HCI::handler(void)
 {
-    uint16_t opCode = (ocf << 6) | ogf;
-    uint8_t dataLength = static_cast<uint8_t>(data.size());
-    data.insert(data.begin(), {static_cast<uint8_t>((opCode >> 8) & 0xFF), static_cast<uint8_t>(opCode & 0xFF), dataLength});
-    send(data);
+
 }

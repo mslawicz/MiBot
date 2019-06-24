@@ -16,7 +16,7 @@ class HCI : public SpiDevice
 public:
     HCI(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS);
     ~HCI();
-    void sendCommand(uint16_t ogf, uint16_t ocf, std::vector<uint8_t>data);
+    void handler(void);
 };
 
 #endif /* HCI_H_ */

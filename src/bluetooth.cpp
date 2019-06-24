@@ -24,18 +24,5 @@ Bluetooth::~Bluetooth()
  */
 void Bluetooth::handler(void)
 {
-    switch(state)
-    {
-    case BTS_start:
-        state = BTS_test;
-        break;
-    case BTS_test:
-        pHci->sendCommand(3, 3, std::vector<uint8_t>{0});
-        state = BTS_end;
-        break;
-    case BTS_end:
-        break;
-    default:
-        break;
-    }
+    pHci->handler();
 }
