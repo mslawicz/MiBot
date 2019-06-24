@@ -8,7 +8,9 @@
 #include "hci.h"
 
 HCI::HCI(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS) :
-    SpiDevice(pBus, portCS, pinCS)
+    SpiDevice(pBus, portCS, pinCS),
+    reset(BLUETOOTH_RESET_PORT, BLUETOOTH_RESET_PIN, GPIO_MODE_OUTPUT_PP),
+    irq(BLUETOOTH_IRQ_PORT, BLUETOOTH_IRQ_PIN, GPIO_MODE_INPUT, GPIO_PULLDOWN)
 {
     state = HciStates::HCIS_start;
 }
@@ -27,8 +29,21 @@ void HCI::handler(void)
     switch(state)
     {
     case HCIS_start:
+        state = HCIS_reset_on;
         break;
-    case HCIS_reset:
+    case HCIS_reset_on:     // switch on reset signal
+        reset.write(GPIO_PinState::GPIO_PIN_RESET);
+        eventTimer.reset();
+        state = HCIS_reset_wait;
+        break;
+    case HCIS_reset_wait:   // wait for the end of the reset pulse
+        if(eventTimer.elapsed(ResetPulseWidth))
+        {
+            reset.write(GPIO_PinState::GPIO_PIN_SET);
+            state = HCIS_reset_off;
+        }
+        break;
+    case HCIS_reset_off:
         break;
     default:
         break;

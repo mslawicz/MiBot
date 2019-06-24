@@ -10,11 +10,19 @@
 
 #include "spi.h"
 #include "gpio.h"
+#include "timer.h"
+
+#define BLUETOOTH_RESET_PORT GPIOA
+#define BLUETOOTH_RESET_PIN  GPIO_PIN_8
+#define BLUETOOTH_IRQ_PORT  GPIOA
+#define BLUETOOTH_IRQ_PIN   GPIO_PIN_0
 
 enum HciStates
 {
     HCIS_start,
-    HCIS_reset
+    HCIS_reset_on,
+    HCIS_reset_wait,
+    HCIS_reset_off
 };
 
 class HCI : public SpiDevice
@@ -25,6 +33,10 @@ public:
     void handler(void);
 private:
     HciStates state;
+    GPIO reset;
+    GPIO irq;
+    Timer eventTimer;
+    const uint32_t ResetPulseWidth = 1000;
 };
 
 #endif /* HCI_H_ */
