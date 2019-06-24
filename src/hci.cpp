@@ -10,8 +10,7 @@
 HCI::HCI(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS) :
     SpiDevice(pBus, portCS, pinCS)
 {
-    // TODO Auto-generated constructor stub
-
+    state = HciStates::HCIS_start;
 }
 
 HCI::~HCI()
@@ -25,5 +24,13 @@ HCI::~HCI()
  */
 void HCI::handler(void)
 {
-
+    switch(state)
+    {
+    case HCIS_start:
+        break;
+    case HCIS_reset:
+        break;
+    default:
+        break;
+    }
 }

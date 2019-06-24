@@ -12,9 +12,7 @@
 
 enum BluetoothStates
 {
-    BTS_start,
-    BTS_test,
-    BTS_end
+    BTS_start
 };
 
 class Bluetooth

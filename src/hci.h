@@ -11,12 +11,20 @@
 #include "spi.h"
 #include "gpio.h"
 
+enum HciStates
+{
+    HCIS_start,
+    HCIS_reset
+};
+
 class HCI : public SpiDevice
 {
 public:
     HCI(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS);
     ~HCI();
     void handler(void);
+private:
+    HciStates state;
 };
 
 #endif /* HCI_H_ */
