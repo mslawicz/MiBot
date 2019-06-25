@@ -23,7 +23,13 @@ enum HciStates
     HCIS_reset_on,
     HCIS_reset_wait,
     HCIS_reset_off,
-    HCIS_wait_for_action
+    HCIS_wait_for_action,
+    HCIS_transmit_rd_header,
+    HCIS_wait_for_rd_header_end,
+    HCIS_rd_header_received,
+    HCIS_check_rd_buffer_size,
+    HCIS_wait_for_rd_buffer_end,
+    HCIS_rd_buffer_received
 };
 
 class HCI : public SpiDevice
@@ -38,6 +44,7 @@ private:
     GPIO irq;
     Timer eventTimer;
     const uint32_t ResetPulseWidth = 1000;
+    uint8_t currentWriteBufferSize;
 };
 
 #endif /* HCI_H_ */

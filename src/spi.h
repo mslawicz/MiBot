@@ -30,6 +30,7 @@ public:
     void markAsBusy(void) { busy = true; }
     void markAsFree(void);
     void markNewDataReady(void);
+    bool isBusy(void) const { return busy; }
     static SpiBus* pSpi1;
     friend SpiDevice;
 private:
@@ -53,10 +54,10 @@ public:
 protected:
     SpiDevice(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS, bool autoCS = true);
     virtual ~SpiDevice();
-private:
     SpiBus* pBus;       // SPI bus for this device
-    std::vector<uint8_t> dataToSend;    // vector of data to send
     std::vector<uint8_t> receptionBuffer;    // vector of data being received
+private:
+    std::vector<uint8_t> dataToSend;    // vector of data to send
     GPIO chipSelect;
     bool newDataReady;
     bool autoCS;
