@@ -43,7 +43,10 @@ void HCI::handler(void)
             state = HCIS_reset_off;
         }
         break;
-    case HCIS_reset_off:
+    case HCIS_reset_off:    // after reset pulse
+        state = HCIS_wait_for_action;
+        break;
+    case HCIS_wait_for_action:  // wait for reception or send request
         break;
     default:
         break;

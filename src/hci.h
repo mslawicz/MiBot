@@ -22,7 +22,8 @@ enum HciStates
     HCIS_start,
     HCIS_reset_on,
     HCIS_reset_wait,
-    HCIS_reset_off
+    HCIS_reset_off,
+    HCIS_wait_for_action
 };
 
 class HCI : public SpiDevice
