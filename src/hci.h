@@ -31,7 +31,12 @@ enum HciStates
     HCIS_rd_header_received,
     HCIS_check_rd_buffer_size,
     HCIS_wait_for_rd_buffer_end,
-    HCIS_rd_buffer_received
+    HCIS_rd_buffer_received,
+    HCIS_transmit_wr_header,
+    HCIS_wait_for_wr_header_end,
+    HCIS_wr_header_received,
+    HCIS_check_wr_buffer_size,
+    HCIS_wait_for_wr_buffer_end
 };
 
 class HCI : public SpiDevice
@@ -41,6 +46,7 @@ public:
     ~HCI();
     void handler(void);
     std::queue<std::vector<uint8_t>>& getEventQueue(void) { return eventQueue; }
+    std::queue<std::vector<uint8_t>>& getCommandQueue(void) { return commandQueue; }
 private:
     HciStates state;
     GPIO reset;
@@ -49,6 +55,8 @@ private:
     const uint32_t ResetPulseWidth = 1000;
     uint8_t currentWriteBufferSize;
     std::queue<std::vector<uint8_t>> eventQueue;
+    std::queue<std::vector<uint8_t>> commandQueue;
+    std::vector<uint8_t> commandToSend;
 };
 
 #endif /* HCI_H_ */

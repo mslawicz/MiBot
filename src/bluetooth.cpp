@@ -9,6 +9,7 @@
 #include "console.h"//XXX
 #include "system.h"//XXX
 #include <string>//XXX
+#include "timer.h"//XXX
 
 Bluetooth::Bluetooth()
 {
@@ -27,6 +28,7 @@ Bluetooth::~Bluetooth()
  */
 void Bluetooth::handler(void)
 {
+    static Timer timer;
     pHci->handler();
     if(!pHci->getEventQueue().empty()) //XXX
     {
@@ -39,5 +41,11 @@ void Bluetooth::handler(void)
             eventData += ",";
         }
         System::getInstance().getConsole()->sendMessage(Severity::Info, eventData);
+    }
+    if(timer.elapsed(500000))
+    {
+        timer.reset();
+        //XXX send: HCI_READ_LOCAL_VERSION_INFORMATION
+        pHci->getCommandQueue().push(std::vector<uint8_t>{0x01, 0x01, 0x10, 0x00});
     }
 }
