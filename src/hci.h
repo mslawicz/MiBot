@@ -11,6 +11,8 @@
 #include "spi.h"
 #include "gpio.h"
 #include "timer.h"
+#include <vector>
+#include <queue>
 
 #define BLUETOOTH_RESET_PORT GPIOA
 #define BLUETOOTH_RESET_PIN  GPIO_PIN_8
@@ -38,6 +40,7 @@ public:
     HCI(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS);
     ~HCI();
     void handler(void);
+    std::queue<std::vector<uint8_t>>& getEventQueue(void) { return eventQueue; }
 private:
     HciStates state;
     GPIO reset;
@@ -45,6 +48,7 @@ private:
     Timer eventTimer;
     const uint32_t ResetPulseWidth = 1000;
     uint8_t currentWriteBufferSize;
+    std::queue<std::vector<uint8_t>> eventQueue;
 };
 
 #endif /* HCI_H_ */

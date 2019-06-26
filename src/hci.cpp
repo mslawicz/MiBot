@@ -14,6 +14,8 @@ HCI::HCI(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS) :
 {
     state = HciStates::HCIS_start;
     currentWriteBufferSize = 0;
+    // bluetooth reset active on start
+    reset.write(GPIO_PinState::GPIO_PIN_RESET);
 }
 
 HCI::~HCI()
@@ -68,15 +70,14 @@ void HCI::handler(void)
         }
         break;
     case HCIS_rd_header_received:
-        if((!receptionBuffer.empty()) && (receptionBuffer[0] == 0x02))
+        if(receptionBuffer[0] == 0x02)
         {
             // bluetooth SPI is ready
-            currentWriteBufferSize = receptionBuffer[1];
             state = HCIS_check_rd_buffer_size;
         }
         else
         {
-            // no valid header received or bluetooth SPI is not ready
+            // bluetooth SPI is not ready
             unselect();
             state = HCIS_wait_for_action;
         }
@@ -103,7 +104,9 @@ void HCI::handler(void)
         }
         break;
     case HCIS_rd_buffer_received:
-        unselect();//XXX this should be done only when IRQ is inactive
+        unselect();
+        eventQueue.push(receptionBuffer);
+        state = HCIS_wait_for_action;
         break;
     default:
         break;

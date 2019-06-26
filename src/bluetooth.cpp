@@ -6,6 +6,9 @@
  */
 
 #include "bluetooth.h"
+#include "console.h"//XXX
+#include "system.h"//XXX
+#include <string>//XXX
 
 Bluetooth::Bluetooth()
 {
@@ -25,4 +28,16 @@ Bluetooth::~Bluetooth()
 void Bluetooth::handler(void)
 {
     pHci->handler();
+    if(!pHci->getEventQueue().empty()) //XXX
+    {
+        auto event = pHci->getEventQueue().front();
+        pHci->getEventQueue().pop();
+        std::string eventData("event: ");
+        for(auto byte : event)
+        {
+            eventData += Console::toHex(byte, 2, false);
+            eventData += ",";
+        }
+        System::getInstance().getConsole()->sendMessage(Severity::Info, eventData);
+    }
 }
