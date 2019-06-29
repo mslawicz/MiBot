@@ -167,3 +167,21 @@ void HCI::handler(void)
         break;
     }
 }
+
+/*
+ * send HCI command
+ */
+void HCI::sendCommand(uint16_t opCode, std::vector<uint8_t> data)
+{
+    uint8_t dataSize = static_cast<uint8_t>(data.size());
+    data.insert(data.begin(), std::initializer_list<uint8_t>{0x01, static_cast<uint8_t>(opCode & 0xFF), static_cast<uint8_t>((opCode >> 8) & 0xFF), dataSize});
+    commandQueue.push(data);
+}
+
+/*
+ * send HCI command with no payload
+ */
+void HCI::sendCommand(uint16_t opCode)
+{
+    sendCommand(opCode, std::vector<uint8_t>());
+}

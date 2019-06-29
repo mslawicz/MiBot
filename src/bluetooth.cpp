@@ -46,6 +46,6 @@ void Bluetooth::handler(void)
     {
         timer.reset();
         //XXX send: HCI_READ_LOCAL_VERSION_INFORMATION
-        pHci->getCommandQueue().push(std::vector<uint8_t>{0x01, 0x01, 0x10, 0x00});
+        pHci->sendCommand(0x1001);
     }
 }

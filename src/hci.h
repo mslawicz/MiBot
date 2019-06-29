@@ -46,7 +46,8 @@ public:
     ~HCI();
     void handler(void);
     std::queue<std::vector<uint8_t>>& getEventQueue(void) { return eventQueue; }
-    std::queue<std::vector<uint8_t>>& getCommandQueue(void) { return commandQueue; }
+    void sendCommand(uint16_t opCode, std::vector<uint8_t> data);
+    void sendCommand(uint16_t opCode);
 private:
     HciStates state;
     GPIO reset;
