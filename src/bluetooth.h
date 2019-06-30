@@ -22,6 +22,8 @@ public:
     ~Bluetooth();
     void handler(void);
 private:
+    void eventHandler(std::vector<uint8_t> event);
+    void vsEventHandler(std::vector<uint8_t> event);
     BluetoothStates state;
     HCI* pHci;
 };
