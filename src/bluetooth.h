@@ -12,7 +12,8 @@
 
 enum BluetoothStates
 {
-    BTS_start
+    BTS_start,
+    BTS_get_version
 };
 
 class Bluetooth
@@ -24,6 +25,7 @@ public:
 private:
     void eventHandler(std::vector<uint8_t> event);
     void vsEventHandler(std::vector<uint8_t> event);
+    void goToState(BluetoothStates nextState) { state = nextState; }
     BluetoothStates state;
     HCI* pHci;
 };

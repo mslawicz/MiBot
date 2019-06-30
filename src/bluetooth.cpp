@@ -37,12 +37,15 @@ void Bluetooth::handler(void)
         pHci->getEventQueue().pop();
         eventHandler(event);
     }
-//    if(timer.elapsed(500000))
-//    {
-//        timer.reset();
-//        //XXX send: HCI_READ_LOCAL_VERSION_INFORMATION
-//        pHci->sendCommand(0x1001);
-//    }
+
+    // state machine service
+    switch(state)
+    {
+    case BTS_start:
+        break;
+    default:
+        break;
+    }
 }
 
 /*
@@ -83,6 +86,8 @@ void Bluetooth::vsEventHandler(std::vector<uint8_t> event)
         {
         case 0x01:
             System::getInstance().getConsole()->sendMessage(Severity::Info, LogChannel::LC_BLUETOOTH, "BlueNRG-MS firmware started properly");
+            //send: HCI_READ_LOCAL_VERSION_INFORMATION
+            pHci->sendCommand(0x1001);
             break;
         default:
             System::getInstance().getConsole()->sendMessage(Severity::Error, LogChannel::LC_BLUETOOTH, "BlueNRG-MS firmware started with code: " + Console::toHex(event[5], 2));
