@@ -146,7 +146,7 @@ void HCI::handler(void)
             // write buffer is big enough
             send(commandToSend);
             commandQueue.pop();
-            state = HCIS_wait_for_rd_buffer_end;
+            state = HCIS_wait_for_wr_buffer_end;
         }
         else
         {
