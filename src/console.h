@@ -18,6 +18,16 @@ enum Severity
     Debug
 };
 
+enum LogChannel
+{
+    LC_SYSTEM,
+    LC_CONSOLE,
+    LC_BLUETOOTH,
+    LC_I2C,
+    LC_SPI,
+    LC_END
+};
+
 class Console
 {
 public:
@@ -26,8 +36,9 @@ public:
     UART& getInterface(void) { return interface; }
     void handler(void);
     void sendPrompt(void) { interface.send(">"); }
-    void sendMessage(Severity level, std::string message);
+    void sendMessage(Severity level, LogChannel channel, std::string message);
     static std::string toHex(uint32_t value, uint8_t positions = 0, bool prefix = true);
+    static const bool IsChannelActive[LogChannel::LC_END];
 private:
     UART interface;
 };

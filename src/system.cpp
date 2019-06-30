@@ -92,7 +92,7 @@ void System::config(void)
 {
     Timer::config();
     pConsole = new Console;
-    pConsole->sendMessage(Severity::Info, "MiBot start");
+    pConsole->sendMessage(Severity::Info,LogChannel::LC_SYSTEM, "MiBot start");
     // SPI1 is used for bluetooth and eeprom
     pSpi1 = new SpiBus(SPI1);
     pEeprom = new Eeprom(SpiBus::pSpi1, EEPROM_CS_PORT, EEPROM_CS_PIN);

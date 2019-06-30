@@ -40,7 +40,7 @@ void Bluetooth::handler(void)
             eventData += Console::toHex(byte, 2, false);
             eventData += ",";
         }
-        System::getInstance().getConsole()->sendMessage(Severity::Info, eventData);
+        System::getInstance().getConsole()->sendMessage(Severity::Info, LogChannel::LC_BLUETOOTH, eventData);
     }
     if(timer.elapsed(500000))
     {

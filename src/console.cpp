@@ -8,6 +8,14 @@
 #include "console.h"
 #include <unordered_map>
 
+const bool Console::IsChannelActive[] = {
+        true, //LC_SYSTEM,
+        true, //LC_CONSOLE,
+        true, //LC_BLUETOOTH,
+        true, //LC_I2C,
+        true, //LC_SPI,
+};
+
 Console::Console() :
     interface(USART2, 115200)
 {
@@ -32,7 +40,7 @@ void Console::handler(void)
 
         // interpret command here
         // XXX send back the string for testing
-        sendMessage(Severity::Debug, "received: '" + message + "'");
+        sendMessage(Severity::Debug, LogChannel::LC_CONSOLE, "received: '" + message + "'");
 
         // send the prompt character
         sendPrompt();
@@ -45,7 +53,7 @@ void Console::handler(void)
 /*
  * send log message to console
  */
-void Console::sendMessage(Severity level, std::string message)
+void Console::sendMessage(Severity level, LogChannel channel, std::string message)
 {
     const std::unordered_map<Severity, std::string> severityStrings =
     {
@@ -54,8 +62,12 @@ void Console::sendMessage(Severity level, std::string message)
             {Info, "info"},
             {Debug, "debug"}
     };
-    message = severityStrings.find(level)->second + ": " + message + "\r\n";
-    interface.send(message);
+
+    if(Console::IsChannelActive[channel])
+    {
+        message = severityStrings.find(level)->second + ": " + message + "\r\n";
+        interface.send(message);
+    }
 }
 
 /*

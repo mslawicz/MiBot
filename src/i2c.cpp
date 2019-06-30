@@ -49,7 +49,7 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
         hDmaI2c1Tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
         if (HAL_DMA_Init(&hDmaI2c1Tx) != HAL_OK)
         {
-            System::getInstance().getConsole()->sendMessage(Severity::Error, name + " TX DMA initialization failed");
+            System::getInstance().getConsole()->sendMessage(Severity::Error, LogChannel::LC_I2C, name + " TX DMA initialization failed");
         }
         __HAL_LINKDMA(&hI2c,hdmatx,hDmaI2c1Tx);
 
@@ -65,7 +65,7 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
         hDmaI2c1Rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
         if (HAL_DMA_Init(&hDmaI2c1Rx) != HAL_OK)
         {
-            System::getInstance().getConsole()->sendMessage(Severity::Error, name + "  RX DMA initialization failed");
+            System::getInstance().getConsole()->sendMessage(Severity::Error, LogChannel::LC_I2C, name + "  RX DMA initialization failed");
         }
 
         __HAL_LINKDMA(&hI2c,hdmarx,hDmaI2c1Rx);
@@ -83,15 +83,15 @@ I2cBus::I2cBus(I2C_TypeDef* instance)
     hI2c.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
     if (HAL_I2C_Init(&hI2c) == HAL_OK)
     {
-        System::getInstance().getConsole()->sendMessage(Severity::Info, name + " initialized");
+        System::getInstance().getConsole()->sendMessage(Severity::Info, LogChannel::LC_I2C, name + " initialized");
     }
     else
     {
-        System::getInstance().getConsole()->sendMessage(Severity::Error, name + " initialization failed");
+        System::getInstance().getConsole()->sendMessage(Severity::Error, LogChannel::LC_I2C, name + " initialization failed");
     }
     if(HAL_I2CEx_ConfigAnalogFilter(&hI2c, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
     {
-        System::getInstance().getConsole()->sendMessage(Severity::Error, name + " filter configuration failed");
+        System::getInstance().getConsole()->sendMessage(Severity::Error, LogChannel::LC_I2C, name + " filter configuration failed");
     }
     busy = false;
     pLastReadDevice = nullptr;
@@ -105,7 +105,7 @@ I2cDevice::I2cDevice(I2cBus* pBus, DeviceAddress deviceAddress) :
         pBus(pBus),
         deviceAddress(deviceAddress)
 {
-    System::getInstance().getConsole()->sendMessage(Severity::Info, "I2C device created, addr=" + Console::toHex(deviceAddress, 2));
+    System::getInstance().getConsole()->sendMessage(Severity::Info, LogChannel::LC_I2C, "I2C device created, addr=" + Console::toHex(deviceAddress, 2));
     newDataReady = false;
 }
 
@@ -187,5 +187,5 @@ void I2cBus::markNewDataReady(void)
   */
 void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
 {
-    System::getInstance().getConsole()->sendMessage(Severity::Error, " I2C error code=" + std::to_string(HAL_I2C_GetError(hi2c)));
+    System::getInstance().getConsole()->sendMessage(Severity::Error, LogChannel::LC_I2C, " I2C error code=" + std::to_string(HAL_I2C_GetError(hi2c)));
 }

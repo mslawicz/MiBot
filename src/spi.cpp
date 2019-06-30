@@ -51,7 +51,7 @@ SpiBus::SpiBus(SPI_TypeDef* instance) :
         hDmaSpi1Rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
         if (HAL_DMA_Init(&hDmaSpi1Rx) != HAL_OK)
         {
-            System::getInstance().getConsole()->sendMessage(Severity::Error, name + " RX DMA initialization failed");
+            System::getInstance().getConsole()->sendMessage(Severity::Error, LogChannel::LC_SPI, name + " RX DMA initialization failed");
         }
         __HAL_LINKDMA(&hSpi,hdmarx,hDmaSpi1Rx);
 
@@ -68,7 +68,7 @@ SpiBus::SpiBus(SPI_TypeDef* instance) :
         hDmaSpi1Tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
         if (HAL_DMA_Init(&hDmaSpi1Tx) != HAL_OK)
         {
-            System::getInstance().getConsole()->sendMessage(Severity::Error, name + " TX DMA initialization failed");
+            System::getInstance().getConsole()->sendMessage(Severity::Error, LogChannel::LC_SPI, name + " TX DMA initialization failed");
         }
         __HAL_LINKDMA(&hSpi,hdmatx,hDmaSpi1Tx);
 
@@ -88,11 +88,11 @@ SpiBus::SpiBus(SPI_TypeDef* instance) :
     hSpi.Init.CRCPolynomial = 10;
     if (HAL_SPI_Init(&hSpi) == HAL_OK)
     {
-        System::getInstance().getConsole()->sendMessage(Severity::Info, name + " initialized");
+        System::getInstance().getConsole()->sendMessage(Severity::Info, LogChannel::LC_SPI, name + " initialized");
     }
     else
     {
-        System::getInstance().getConsole()->sendMessage(Severity::Error, name + " initialization failed");
+        System::getInstance().getConsole()->sendMessage(Severity::Error, LogChannel::LC_SPI, name + " initialization failed");
     }
     busy = false;
     pLastServedDevice = nullptr;
@@ -122,7 +122,7 @@ SpiDevice::SpiDevice(SpiBus* pBus, GPIO_TypeDef* portCS, uint32_t pinCS, bool au
         chipSelect(portCS, pinCS, GPIO_MODE_OUTPUT_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH),
         autoCS(autoCS)
 {
-    System::getInstance().getConsole()->sendMessage(Severity::Info, "SPI device created, CS=" + Console::toHex(reinterpret_cast<uint32_t>(portCS)) + "/" + Console::toHex(pinCS));
+    System::getInstance().getConsole()->sendMessage(Severity::Info, LogChannel::LC_SPI, "SPI device created, CS=" + Console::toHex(reinterpret_cast<uint32_t>(portCS)) + "/" + Console::toHex(pinCS));
 
     chipSelect.write(GPIO_PinState::GPIO_PIN_SET);
     newDataReady = false;
@@ -267,5 +267,5 @@ void SpiBus::markNewDataReady(void)
   */
 void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
 {
-    System::getInstance().getConsole()->sendMessage(Severity::Error, " SPI error code=" + std::to_string(HAL_SPI_GetError(hspi)));
+    System::getInstance().getConsole()->sendMessage(Severity::Error, LogChannel::LC_SPI, " SPI error code=" + std::to_string(HAL_SPI_GetError(hspi)));
 }
