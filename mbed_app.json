@@ -3,6 +3,11 @@
         "*": {
             "platform.stdio-baud-rate": 115200,
             "target.printf_lib": "std"
+        },
+        "NUCLEO_F401RE": {
+            "target.components_add": ["BlueNRG_2"],
+            "target.features_add": ["BLE"],
+            "target.extra_labels_add": ["CORDIO"]
         }
     }
 }

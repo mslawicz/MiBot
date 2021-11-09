@@ -1,4 +1,5 @@
 #include "Logger.h"
+#include "ble/BLE.h"
 #include "mbed.h"
 #include <iostream>
 
@@ -11,6 +12,8 @@ int main()
 
     logTimer.start();
     LOG_INFO("MiBot v1.0");
+
+    BLE& mydevicename = BLE::Instance();
 
     while (true)
     {
