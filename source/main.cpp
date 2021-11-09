@@ -1,3 +1,4 @@
+#include "Logger.h"
 #include "mbed.h"
 #include <iostream>
 
@@ -8,7 +9,9 @@ int main()
     HAL_DBGMCU_EnableDBGSleepMode();
 #endif
 
-    std::cout << "Hello MiBot!" << std::endl;
+    logTimer.start();
+    LOG_INFO("MiBot v1.0");
+
     while (true)
     {
 
