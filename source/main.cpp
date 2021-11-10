@@ -13,6 +13,9 @@ int main()
     logTimer.start();
     LOG_INFO("MiBot v1.0");
 
+    // main event queue
+    events::EventQueue eventQueue;
+
     BLE& mydevicename = BLE::Instance();
 
     while (true)
