@@ -1,4 +1,5 @@
 #include "Logger.h"
+#include "BleProcess.h"
 #include "ble/BLE.h"
 #include "mbed.h"
 #include <iostream>
@@ -16,7 +17,11 @@ int main()
     // main event queue
     events::EventQueue eventQueue;
 
-    BLE& mydevicename = BLE::Instance();
+    //BLE interface instance
+    BLE& bleInterface = BLE::Instance();
+
+    //construct BLE process
+    BleProcess bleProcess(eventQueue, bleInterface);
 
     while (true)
     {

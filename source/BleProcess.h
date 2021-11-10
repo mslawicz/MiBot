@@ -12,6 +12,13 @@
  */
 class BleProcess : private mbed::NonCopyable<BleProcess>, public ble::Gap::EventHandler
 {
+public:
+    BleProcess(events::EventQueue &event_queue, BLE &ble_interface);
+
+private:
+    events::EventQueue& _event_queue;
+    BLE& _ble_interface;
+    mbed::Callback<void(BLE&, events::EventQueue&)> _post_init_cb{nullptr};
 };
 
 #endif /* BLE_PROCESS_H_ */
