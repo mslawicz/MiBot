@@ -1,3 +1,4 @@
+#include "Logger.h"
 #include <BleProcess.h>
 
 /**
@@ -20,4 +21,16 @@ BleProcess::BleProcess(events::EventQueue &event_queue, BLE &ble_interface) :
 void BleProcess::on_init(mbed::Callback<void(BLE&, events::EventQueue&)> cb)
 {
     _post_init_cb = cb;
+}
+
+/**
+* Close existing connections and stop the process.
+*/
+void BleProcess::stop()
+{
+    if (_ble_interface.hasInitialized())
+    {
+        _ble_interface.shutdown();
+        LOG_DEBUG("BLE process stopped");
+    }
 }

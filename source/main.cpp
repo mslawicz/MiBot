@@ -26,9 +26,13 @@ int main()
     //assign BLE on init callback function
     bleProcess.on_init(callback([](BLE&  /*bleInterface*/, events::EventQueue&  /*eventQueue*/){ LOG_INFO("executing on init callback");}));
 
-    while (true)
-    {
+    // bind the event queue to the ble interface, initialize the interface and start advertising
+    bleProcess.start();
 
-    }
+    // process the event queue
+    eventQueue.dispatch_forever();
+
+    // this should never be reached
+    return 0;
 }
 
