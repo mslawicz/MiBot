@@ -2,6 +2,7 @@
 #define BLE_PROCESS_H_
 
 #include "ble/BLE.h"
+#include "ble/Gap.h"
 #include <mbed.h>
 
 /**
@@ -28,6 +29,8 @@ private:
     bool setAdvertisingParameters();
     bool setAdvertisingData();
     bool startAdvertising();
+    void onConnectionComplete(const ble::ConnectionCompleteEvent &event) override;
+    void onDisconnectionComplete(const ble::DisconnectionCompleteEvent &event) override;
     events::EventQueue& _event_queue;
     BLE& _ble_interface;
     mbed::Callback<void(BLE&, events::EventQueue&)> _post_init_cb{nullptr};

@@ -1,5 +1,4 @@
 #include "Logger.h"
-#include "ble/Gap.h"
 #include <BleProcess.h>
 //#include "ble/GapAdvertisingParams.h"
 //#include "ble/GapAdvertisingData.h"
@@ -95,8 +94,6 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
     Gap& gap = _ble_interface.gap();
 
     gap.setEventHandler(this);
-    //gap.onConnection(this, &BLEProcess::when_connection);
-    //gap.onDisconnection(this, &BLEProcess::when_disconnection);
 
     if (!setAdvertisingParameters())
     {
@@ -188,4 +185,21 @@ bool BleProcess::startAdvertising()
 
     LOG_INFO("Advertising started");
     return true;
+}
+
+/*
+Called when connection attempt ends or an advertising device has been connected
+*/
+void BleProcess::onConnectionComplete(const ble::ConnectionCompleteEvent& event)
+{
+    LOG_INFO("BLE client connected");
+}
+
+/*
+Called when a connection has been disconnected
+*/
+void BleProcess::onDisconnectionComplete(const ble::DisconnectionCompleteEvent&  /*event*/)
+{
+    LOG_INFO("BLE client disconnected");
+    startAdvertising();
 }
