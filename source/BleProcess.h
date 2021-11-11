@@ -15,6 +15,10 @@ class BleProcess : private mbed::NonCopyable<BleProcess>, public ble::Gap::Event
 public:
     BleProcess(events::EventQueue &event_queue, BLE &ble_interface);
     ~BleProcess() { stop(); }
+    BleProcess(const BleProcess&) = delete;
+    BleProcess(const BleProcess&&) = delete;
+    BleProcess& operator=(const BleProcess&) = delete;
+    BleProcess& operator=(const BleProcess&&) = delete;
     bool start();
     void stop();
     void setOnInitCbk(mbed::Callback<void(BLE&, events::EventQueue&)> cb);
