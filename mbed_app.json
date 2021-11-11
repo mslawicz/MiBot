@@ -5,7 +5,7 @@
             "target.printf_lib": "std"
         },
         "NUCLEO_F401RE": {
-            "target.components_add": ["BlueNRG_2"],
+            "target.components_add": ["BlueNRG_MS"],
             "target.features_add": ["BLE"],
             "target.extra_labels_add": ["CORDIO"]
         }

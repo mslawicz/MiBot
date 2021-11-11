@@ -14,7 +14,7 @@ class BleProcess : private mbed::NonCopyable<BleProcess>, public ble::Gap::Event
 {
 public:
     BleProcess(events::EventQueue &event_queue, BLE &ble_interface);
-
+    void on_init(mbed::Callback<void(BLE&, events::EventQueue&)> cb);
 private:
     events::EventQueue& _event_queue;
     BLE& _ble_interface;

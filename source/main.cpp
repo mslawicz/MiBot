@@ -23,6 +23,9 @@ int main()
     //construct BLE process
     BleProcess bleProcess(eventQueue, bleInterface);
 
+    //assign BLE on init callback function
+    bleProcess.on_init(callback([](BLE&  /*bleInterface*/, events::EventQueue&  /*eventQueue*/){ LOG_INFO("executing on init callback");}));
+
     while (true)
     {
 
