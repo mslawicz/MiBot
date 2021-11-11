@@ -3,6 +3,8 @@
 //#include "ble/GapAdvertisingParams.h"
 //#include "ble/GapAdvertisingData.h"
 #include "ble/FunctionPointerWithContext.h"
+#include <algorithm>
+#include <iomanip>
 
 /**
     * Construct a BLEProcess from an event queue and a ble interface.
@@ -51,7 +53,6 @@ bool BleProcess::start()
         return false;
     }
 
-    _ble_interface.securityManager().init();
     return true;
 }
 
@@ -104,6 +105,8 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
     {
         return;
     }
+
+    printMacAddress();
 
     if (!startAdvertising())
     {
@@ -190,7 +193,7 @@ bool BleProcess::startAdvertising()
 /*
 Called when connection attempt ends or an advertising device has been connected
 */
-void BleProcess::onConnectionComplete(const ble::ConnectionCompleteEvent& event)
+void BleProcess::onConnectionComplete(const ble::ConnectionCompleteEvent&  /*event*/)
 {
     LOG_INFO("BLE client connected");
 }
@@ -202,4 +205,24 @@ void BleProcess::onDisconnectionComplete(const ble::DisconnectionCompleteEvent& 
 {
     LOG_INFO("BLE client disconnected");
     startAdvertising();
+}
+
+void BleProcess::printMacAddress()
+{
+    ble::own_address_type_t addr_type;
+    ble::address_t addr;
+    auto error = _ble_interface.gap().getAddress(addr_type, addr);
+    if(error != BLE_ERROR_NONE)
+    {
+        LOG_ERROR("cannot get MAC address, error " << error);
+        return;
+    }
+ 
+    LOG_DEBUG("device MAC address: " << std::hex
+        << static_cast<int>(addr[5]) << " "
+        << static_cast<int>(addr[4]) << " "
+        << static_cast<int>(addr[3]) << " "
+        << static_cast<int>(addr[2]) << " "
+        << static_cast<int>(addr[1]) << " "
+        << static_cast<int>(addr[0]));
 }

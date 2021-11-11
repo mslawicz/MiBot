@@ -31,6 +31,7 @@ private:
     bool startAdvertising();
     void onConnectionComplete(const ble::ConnectionCompleteEvent &event) override;
     void onDisconnectionComplete(const ble::DisconnectionCompleteEvent &event) override;
+    void printMacAddress();
     events::EventQueue& _event_queue;
     BLE& _ble_interface;
     mbed::Callback<void(BLE&, events::EventQueue&)> _post_init_cb{nullptr};
