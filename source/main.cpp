@@ -12,7 +12,7 @@ int main()
 #endif
 
     logTimer.start();
-    LOG_INFO("MiBot v1.0");
+    LOG_ALWAYS("MiBot v1.0");
 
     // main event queue
     events::EventQueue eventQueue;

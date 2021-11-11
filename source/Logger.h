@@ -19,6 +19,7 @@ enum struct LogLevel : uint8_t
 
 {
     None,
+    Always,
     Error,
     Warning,
     Info,
@@ -29,7 +30,8 @@ enum struct LogLevel : uint8_t
 constexpr LogLevel currentLevel = LogLevel::Debug;
 
 void logMessage(LogLevel level, std::ostream& ostr);
- 
+
+#define LOG_ALWAYS(message) logMessage(LogLevel::Always, std::ostringstream().flush() << message)     //NOLINT(cppcoreguidelines-macro-usage,bugprone-macro-parentheses)
 #define LOG_ERROR(message) logMessage(LogLevel::Error, std::ostringstream().flush() << message)     //NOLINT(cppcoreguidelines-macro-usage,bugprone-macro-parentheses)
 #define LOG_WARNING(message) logMessage(LogLevel::Warning, std::ostringstream().flush() << message) //NOLINT(cppcoreguidelines-macro-usage,bugprone-macro-parentheses)
 #define LOG_INFO(message) logMessage(LogLevel::Info, std::ostringstream().flush() << message)       //NOLINT(cppcoreguidelines-macro-usage,bugprone-macro-parentheses)

@@ -6,7 +6,7 @@ Timer logTimer;     //NOLINT(fuchsia-statically-constructed-objects,cppcoreguide
 
 void logMessage(LogLevel level, std::ostream& ostr)     //NOLINT(misc-definitions-in-headers)
 {  
-    const std::vector<std::string>levelText{"None", "Error", "Warning", "Info", "Debug"};
+    const std::vector<std::string>levelText{"None", ":", "Error", "Warning", "Info", "Debug"};
     auto levelValue = static_cast<uint8_t>(level);
     if(level <= currentLevel)
     {
