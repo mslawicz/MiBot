@@ -26,7 +26,7 @@ enum struct LogLevel : uint8_t
 };
  
 //////// set current log level /////////
-constexpr LogLevel currentLevel = LogLevel::Info;
+constexpr LogLevel currentLevel = LogLevel::Debug;
 
 void logMessage(LogLevel level, std::ostream& ostr);
  

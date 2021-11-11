@@ -14,13 +14,16 @@ class BleProcess : private mbed::NonCopyable<BleProcess>, public ble::Gap::Event
 {
 public:
     BleProcess(events::EventQueue &event_queue, BLE &ble_interface);
-    ~BleProcess()
-    {
-        stop();
-    }
+    ~BleProcess() { stop(); }
+    bool start();
     void stop();
-    void on_init(mbed::Callback<void(BLE&, events::EventQueue&)> cb);
+    void setOnInitCbk(mbed::Callback<void(BLE&, events::EventQueue&)> cb);
 private:
+    void scheduleBleEvents(BLE::OnEventsToProcessCallbackContext* event);
+    void whenInitComplete(BLE::InitializationCompleteCallbackContext* event);
+    bool setAdvertisingParameters();
+    bool setAdvertisingData();
+    bool startAdvertising();
     events::EventQueue& _event_queue;
     BLE& _ble_interface;
     mbed::Callback<void(BLE&, events::EventQueue&)> _post_init_cb{nullptr};
