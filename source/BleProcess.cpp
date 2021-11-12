@@ -11,9 +11,11 @@
     *
     * Call start() to initiate ble processing.
     */
-BleProcess::BleProcess(events::EventQueue &event_queue, BLE &ble_interface) :
+BleProcess::BleProcess(events::EventQueue& event_queue, BLE& ble_interface) :
     _event_queue(event_queue),
-    _ble_interface(ble_interface)
+    _ble_interface(ble_interface),
+    _heartrate_uuid(GattService::UUID_HEART_RATE_SERVICE),  //XXX heartrate demo
+    _heartrate_service(ble_interface, _heartrate_value, HeartRateService::LOCATION_FINGER)  //XXX heartrate demo
 {
 }
 
@@ -122,6 +124,13 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
         LOG_WARNING("BLE post init callback has not been set");
     }
    
+    //XXX heartrate demo
+    _event_queue.call_every(1000ms, [this]()
+    {
+        _heartrate_value++;
+        if(_heartrate_value > 100) { _heartrate_value = 60;}
+        _heartrate_service.updateHeartRate(_heartrate_value);
+    });
 }
 
 bool BleProcess::setAdvertisingParameters()
@@ -158,6 +167,8 @@ bool BleProcess::setAdvertisingData()
         ble::LEGACY_ADVERTISING_HANDLE,
         ble::AdvertisingDataSimpleBuilder<ble::LEGACY_ADVERTISING_MAX_SIZE>()
             .setFlags()
+            .setAppearance(ble::adv_data_appearance_t::GENERIC_HEART_RATE_SENSOR)   //XXX heartrate demo
+            .setLocalServiceList({&_heartrate_uuid, 1})     //XXX heartrate demo
             .setName("MiBot")
             .getAdvertisingData()
     );

@@ -3,6 +3,7 @@
 
 #include "ble/BLE.h"
 #include "ble/Gap.h"
+#include "ble/services/HeartRateService.h"  //XXX heartrate demo
 #include <mbed.h>
 
 /**
@@ -37,6 +38,9 @@ private:
     events::EventQueue& _event_queue;
     BLE& _ble_interface;
     mbed::Callback<void(BLE&, events::EventQueue&)> _post_init_cb{nullptr};
+    UUID _heartrate_uuid;   //XXX heartrate demo
+    uint16_t _heartrate_value{60U};  //XXX heartrate demo
+    HeartRateService _heartrate_service;    //XXX heartrate demo
 };
 
 #endif /* BLE_PROCESS_H_ */
