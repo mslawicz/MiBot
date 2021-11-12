@@ -128,10 +128,14 @@ bool BleProcess::setAdvertisingParameters()
 {
     Gap &gap = _ble_interface.gap();
 
-    ble_error_t error = gap.setAdvertisingParameters(
-        ble::LEGACY_ADVERTISING_HANDLE,
-        ble::AdvertisingParameters()
+    static const ble::AdvertisingParameters advertisingParams
+    (
+        ble::advertising_type_t::CONNECTABLE_UNDIRECTED,
+        ble::adv_interval_t(ble::millisecond_t(50)),        //minimum interval in ms
+        ble::adv_interval_t(ble::millisecond_t(100))        //maximum interval in ms
     );
+
+    ble_error_t error = gap.setAdvertisingParameters(ble::LEGACY_ADVERTISING_HANDLE, advertisingParams);
 
     if (error != BLE_ERROR_NONE)
     {
@@ -186,24 +190,26 @@ bool BleProcess::startAdvertising()
         return false;
     }
 
-    LOG_INFO("Advertising started");
+    LOG_INFO("Advertising start command");
     return true;
 }
 
-/*
-Called when connection attempt ends or an advertising device has been connected
+/**
+* Called when connection attempt ends. Check event.getStatus() to see if connection
+* was established. If this device is the peripheral and it was advertising this will
+* end the advertising set which will also create the onAdvertisingEnd event.
 */
-void BleProcess::onConnectionComplete(const ble::ConnectionCompleteEvent&  /*event*/)
+void BleProcess::onConnectionComplete(const ble::ConnectionCompleteEvent&  event)
 {
-    LOG_INFO("BLE client connected");
+    LOG_INFO("BLE client connected with status " << event.getStatus());
 }
 
 /*
 Called when a connection has been disconnected
 */
-void BleProcess::onDisconnectionComplete(const ble::DisconnectionCompleteEvent&  /*event*/)
+void BleProcess::onDisconnectionComplete(const ble::DisconnectionCompleteEvent& event)
 {
-    LOG_INFO("BLE client disconnected");
+    LOG_INFO("BLE client disconnected for reason " << static_cast<int>(event.getReason().value()));
     startAdvertising();
 }
 
@@ -225,4 +231,31 @@ void BleProcess::printMacAddress()
         << static_cast<int>(addr[2]) << " "
         << static_cast<int>(addr[1]) << " "
         << static_cast<int>(addr[0]));
+}
+
+/**
+* Called when advertising starts.
+*
+* @param event Advertising start event.
+*
+* @note Check event.getStatus() to see if advertising started successfully
+*/
+void BleProcess::onAdvertisingStart(const ble::AdvertisingStartEvent& event)
+{
+    LOG_INFO("BLE advertising (set " << event.getStatus() << ") started with status " << event.getStatus());
+}
+
+/**
+* Called when advertising ends.
+*
+* Advertising ends when the process timeout or if it is stopped by the
+* application or if the local device accepts a connection request.
+*
+* @param event Advertising end event.
+*
+* @note Check event.getStatus() to see if advertising ended successfully
+*/
+void BleProcess::onAdvertisingEnd(const ble::AdvertisingEndEvent &event)
+{
+    LOG_INFO("BLE advertising ends for reason " << static_cast<int>(event.getCompleted_events()) << " with status " << event.getStatus());
 }
