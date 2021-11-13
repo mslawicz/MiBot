@@ -22,7 +22,7 @@ public:
     BleProcess& operator=(const BleProcess&&) = delete;
     bool start();
     void stop();
-    void setOnInitCbk(mbed::Callback<void(BLE&, events::EventQueue&)> cb);
+    void setOnInitCbk(mbed::Callback<void()> cb);
 private:
     void scheduleBleEvents(BLE::OnEventsToProcessCallbackContext* event);
     void whenInitComplete(BLE::InitializationCompleteCallbackContext* event);
@@ -36,7 +36,7 @@ private:
     void onAdvertisingEnd(const ble::AdvertisingEndEvent& event) override;
     events::EventQueue& _event_queue;
     BLE& _ble_interface;
-    mbed::Callback<void(BLE&, events::EventQueue&)> _post_init_cb{nullptr};
+    mbed::Callback<void()> _post_init_cb{nullptr};
 };
 
 #endif /* BLE_PROCESS_H_ */

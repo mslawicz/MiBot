@@ -22,7 +22,7 @@ BleProcess::BleProcess(events::EventQueue& event_queue) :
     * @param[in] cb The callback object that will be called when the ble
     * interface is initialized.
     */
-void BleProcess::setOnInitCbk(mbed::Callback<void(BLE&, events::EventQueue&)> cb)
+void BleProcess::setOnInitCbk(mbed::Callback<void()> cb)
 {
     _post_init_cb = cb;
 }
@@ -114,7 +114,7 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
 
     if (_post_init_cb)
     {
-        _post_init_cb(_ble_interface, _event_queue);
+        _post_init_cb();
     }
     else
     {
