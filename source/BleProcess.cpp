@@ -150,17 +150,13 @@ bool BleProcess::setAdvertisingData()
 {
     Gap &gap = _ble_interface.gap();
 
-    /* Use the simple builder to construct the payload; it fails at runtime
-    * if there is not enough space left in the buffer */
-    ble_error_t error = gap.setAdvertisingPayload
-    (
-        ble::LEGACY_ADVERTISING_HANDLE,
-        ble::AdvertisingDataSimpleBuilder<ble::LEGACY_ADVERTISING_MAX_SIZE>()
-            .setFlags()
-            .setName("MiBot")
-            .setAppearance(ble::adv_data_appearance_t::GAMEPAD)
-            .getAdvertisingData()
-    );
+    //Use the simple builder to construct the payload
+    _dataBuilder
+    .setFlags()
+    .setName("MiBot")
+    .setAppearance(ble::adv_data_appearance_t::HUMAN_INTERFACE_DEVICE_HID);
+
+    ble_error_t error = gap.setAdvertisingPayload(ble::LEGACY_ADVERTISING_HANDLE, _dataBuilder.getAdvertisingData());
 
     if (error != BLE_ERROR_NONE)
     {
