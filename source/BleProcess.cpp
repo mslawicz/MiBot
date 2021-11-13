@@ -70,9 +70,9 @@ void BleProcess::stop()
 /**
 * Schedule processing of events from the BLE middleware in the event queue.
 */
-void BleProcess::scheduleBleEvents(BLE::OnEventsToProcessCallbackContext* event)
+void BleProcess::scheduleBleEvents(BLE::OnEventsToProcessCallbackContext* context)
 {
-    _event_queue.call(mbed::callback(&event->ble, &BLE::processEvents));
+    _event_queue.call(mbed::callback(&context->ble, &BLE::processEvents));
 }
 
 /**

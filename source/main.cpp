@@ -1,8 +1,11 @@
 #include "Logger.h"
+#include "CustomService.h"
 #include "BleProcess.h"
 #include "ble/BLE.h"
 #include "mbed.h"
 #include <iostream>
+
+CustomService* pCustomService = nullptr;
 
 // main() runs in its own thread in the OS
 int main()
@@ -23,8 +26,16 @@ int main()
     //construct BLE process
     BleProcess bleProcess(eventQueue, bleInterface);
 
+    //create GATT server (this can be moved to main control function when available)
+    CustomService movementControl(eventQueue, bleInterface);
+    pCustomService = &movementControl;
+
     //assign BLE on init callback function
-    bleProcess.setOnInitCbk(callback([](BLE&  /*bleInterface*/, events::EventQueue&  /*eventQueue*/){ LOG_INFO("executing on init callback");}));
+    bleProcess.setOnInitCbk(callback([](BLE&   /*bleInterface*/, events::EventQueue&   /*eventQueue*/)
+    {
+        LOG_INFO("executing on init callback");
+        pCustomService->start();
+    }));
 
     // bind the event queue to the ble interface, initialize the interface and start advertising
     bleProcess.start();
@@ -35,4 +46,3 @@ int main()
     // this should never be reached
     return 0;
 }
-
