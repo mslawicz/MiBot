@@ -1,8 +1,7 @@
 #include "Logger.h"
 #include <BleProcess.h>
-//#include "ble/GapAdvertisingParams.h"
-//#include "ble/GapAdvertisingData.h"
 #include "ble/FunctionPointerWithContext.h"
+#include <GattServer.h>
 #include <algorithm>
 #include <iomanip>
 
