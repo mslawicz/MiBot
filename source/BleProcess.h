@@ -39,5 +39,4 @@ private:
     mbed::Callback<void()> _post_init_cb{nullptr};
     ble::AdvertisingDataSimpleBuilder<ble::LEGACY_ADVERTISING_MAX_SIZE> _dataBuilder;
 };
-
 #endif /* BLE_PROCESS_H_ */

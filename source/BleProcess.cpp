@@ -150,10 +150,13 @@ bool BleProcess::setAdvertisingData()
 {
     Gap &gap = _ble_interface.gap();
 
+    UUID services[]{GattService::UUID_HUMAN_INTERFACE_DEVICE_SERVICE, GattService::UUID_BATTERY_SERVICE};  //NOLINT(hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-c-arrays)
+
     //Use the simple builder to construct the payload
     _dataBuilder
     .setFlags()
     .setName("MiBot")
+    .setLocalServiceList({static_cast<UUID*>(services), sizeof(services) / sizeof(services[0])})
     .setAppearance(ble::adv_data_appearance_t::HUMAN_INTERFACE_DEVICE_HID);
 
     ble_error_t error = gap.setAdvertisingPayload(ble::LEGACY_ADVERTISING_HANDLE, _dataBuilder.getAdvertisingData());
