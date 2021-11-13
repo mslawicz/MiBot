@@ -158,6 +158,7 @@ bool BleProcess::setAdvertisingData()
         ble::AdvertisingDataSimpleBuilder<ble::LEGACY_ADVERTISING_MAX_SIZE>()
             .setFlags()
             .setName("MiBot")
+            .setAppearance(ble::adv_data_appearance_t::GAMEPAD)
             .getAdvertisingData()
     );
 
