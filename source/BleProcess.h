@@ -14,7 +14,7 @@
 class BleProcess : private mbed::NonCopyable<BleProcess>, public ble::Gap::EventHandler
 {
 public:
-    BleProcess(events::EventQueue &event_queue, BLE &ble_interface);
+    BleProcess(events::EventQueue& event_queue, BLE& ble_interface);
     ~BleProcess() { stop(); }
     BleProcess(const BleProcess&) = delete;
     BleProcess(const BleProcess&&) = delete;
@@ -29,11 +29,11 @@ private:
     bool setAdvertisingParameters();
     bool setAdvertisingData();
     bool startAdvertising();
-    void onConnectionComplete(const ble::ConnectionCompleteEvent &event) override;
-    void onDisconnectionComplete(const ble::DisconnectionCompleteEvent &event) override;
+    void onConnectionComplete(const ble::ConnectionCompleteEvent& event) override;
+    void onDisconnectionComplete(const ble::DisconnectionCompleteEvent& event) override;
     void printMacAddress();
-    void onAdvertisingStart(const ble::AdvertisingStartEvent &event) override;
-    void onAdvertisingEnd(const ble::AdvertisingEndEvent &event) override;
+    void onAdvertisingStart(const ble::AdvertisingStartEvent& event) override;
+    void onAdvertisingEnd(const ble::AdvertisingEndEvent& event) override;
     events::EventQueue& _event_queue;
     BLE& _ble_interface;
     mbed::Callback<void(BLE&, events::EventQueue&)> _post_init_cb{nullptr};

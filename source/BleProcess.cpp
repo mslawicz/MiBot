@@ -11,7 +11,7 @@
     *
     * Call start() to initiate ble processing.
     */
-BleProcess::BleProcess(events::EventQueue &event_queue, BLE &ble_interface) :
+BleProcess::BleProcess(events::EventQueue& event_queue, BLE& ble_interface) :
     _event_queue(event_queue),
     _ble_interface(ble_interface)
 {
@@ -255,7 +255,7 @@ void BleProcess::onAdvertisingStart(const ble::AdvertisingStartEvent& event)
 *
 * @note Check event.getStatus() to see if advertising ended successfully
 */
-void BleProcess::onAdvertisingEnd(const ble::AdvertisingEndEvent &event)
+void BleProcess::onAdvertisingEnd(const ble::AdvertisingEndEvent& event)
 {
     LOG_INFO("BLE advertising ends for reason " << static_cast<int>(event.getCompleted_events()) << " with status " << event.getStatus());
 }
