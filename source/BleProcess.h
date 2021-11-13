@@ -14,7 +14,7 @@
 class BleProcess : private mbed::NonCopyable<BleProcess>, public ble::Gap::EventHandler
 {
 public:
-    BleProcess(events::EventQueue& event_queue, BLE& ble_interface);
+    explicit BleProcess(events::EventQueue& event_queue);
     ~BleProcess() { stop(); }
     BleProcess(const BleProcess&) = delete;
     BleProcess(const BleProcess&&) = delete;

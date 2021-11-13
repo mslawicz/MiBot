@@ -10,9 +10,9 @@
     *
     * Call start() to initiate ble processing.
     */
-BleProcess::BleProcess(events::EventQueue& event_queue, BLE& ble_interface) :
+BleProcess::BleProcess(events::EventQueue& event_queue) :
     _event_queue(event_queue),
-    _ble_interface(ble_interface)
+    _ble_interface(BLE::Instance())
 {
 }
 
