@@ -4,6 +4,7 @@
 //#include <GattServer.h>
 #include <algorithm>
 #include <iomanip>
+#include <sstream>
 
 /**
     * Construct a BLEProcess from an event queue and a ble interface.
@@ -92,11 +93,72 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
     
     LOG_INFO("BLE instance initialized");
 
+    ble::own_address_type_t addr_type;
+    ble::address_t addr;
+    ble_error_t error = _ble_interface.gap().getAddress(addr_type, addr);
+    if(error != BLE_ERROR_NONE)
+    {
+        LOG_ERROR("cannot get MAC address, error " << error);
+        return;
+    }
+ 
+    printMacAddress(addr.data());
+
+    /* This path will be used to store bonding information but will fallback
+        * to storing in memory if file access fails (for example due to lack of a filesystem) */
+    const char* db_path = "/fs/bt_sec_db";
+
+    error = _ble_interface.securityManager().init
+    (
+        /* enableBonding */ true,
+        /* requireMITM */ false,
+        /* iocaps */ SecurityManager::IO_CAPS_NONE,
+        /* passkey */ nullptr,
+        /* signing */ false,
+        /* dbFilepath */ db_path
+    );
+
+    if (error != BLE_ERROR_NONE)
+    {
+        LOG_ERROR(error << " during initialising security manager");
+        return;
+    }
+
+    /* This tells the stack to generate a pairingRequest event which will require
+    * this application to respond before pairing can proceed. Setting it to false
+    * will automatically accept pairing. */
+    _ble_interface.securityManager().setPairingRequestAuthorisation(true);
+
+#if MBED_CONF_APP_FILESYSTEM_SUPPORT
+    error = _ble_interface.securityManager().preserveBondingStateOnReset(true);
+
+    if (error != BLE_ERROR_NONE)
+    {
+        LOG_ERROR(error << " during preserveBondingStateOnReset");
+    }
+#endif // MBED_CONF_APP_FILESYSTEM_SUPPORT
+
+    /* Tell the security manager to use methods in this class to inform us
+    * of any events. Class needs to implement SecurityManagerEventHandler. */
+    _ble_interface.securityManager().setSecurityManagerEventHandler(this);
+
     //take reference to gap object
     Gap& gap = _ble_interface.gap();
 
     gap.setEventHandler(this);
 
+    error = gap.enablePrivacy(true);
+    if (error != BLE_ERROR_NONE)
+    {
+        LOG_ERROR(error << "Error enabling privacy");
+        return;
+    }  
+
+    /* continuation is in onPrivacyEnabled() */   
+}
+
+void BleProcess::configureAdvertising()
+{
     if (!setAdvertisingParameters())
     {
         return;
@@ -107,7 +169,6 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
         return;
     }
 
-    printMacAddress();
 
     if (!startAdvertising())
     {
@@ -122,7 +183,6 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
     {
         LOG_WARNING("BLE post init callback has not been set");
     }
-   
 }
 
 bool BleProcess::setAdvertisingParameters()
@@ -152,14 +212,10 @@ bool BleProcess::setAdvertisingData()
 {
     Gap &gap = _ble_interface.gap();
 
-    //XXX UUID services[]{GattService::UUID_BATTERY_SERVICE};  //NOLINT(hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-c-arrays)
-
     //Use the simple builder to construct the payload
     _dataBuilder
     .setFlags()
     .setName("MiBot");
-    //XXX.setLocalServiceList({static_cast<UUID*>(services), sizeof(services) / sizeof(services[0])})
-    //XXX.setAppearance(ble::adv_data_appearance_t::);
 
     ble_error_t error = gap.setAdvertisingPayload(ble::LEGACY_ADVERTISING_HANDLE, _dataBuilder.getAdvertisingData());
 
@@ -214,24 +270,21 @@ void BleProcess::onDisconnectionComplete(const ble::DisconnectionCompleteEvent& 
     startAdvertising();
 }
 
-void BleProcess::printMacAddress()
+void BleProcess::printMacAddress(const uint8_t* pAddr)
 {
-    ble::own_address_type_t addr_type;
-    ble::address_t addr;
-    auto error = _ble_interface.gap().getAddress(addr_type, addr);
-    if(error != BLE_ERROR_NONE)
+    stringstream ss;
+    constexpr uint8_t NoOfBytes = 6;
+    ss << std::hex << std::setfill('0') << std::setw(2);
+    for(uint8_t byte=0; byte<NoOfBytes; byte++)
     {
-        LOG_ERROR("cannot get MAC address, error " << error);
-        return;
+        ss << static_cast<int>(pAddr[0]);    //NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        if(byte < NoOfBytes - 1)
+        {
+            ss << ":";
+        }
     }
- 
-    LOG_DEBUG("device MAC address: " << std::hex
-        << static_cast<int>(addr[5]) << " "
-        << static_cast<int>(addr[4]) << " "
-        << static_cast<int>(addr[3]) << " "
-        << static_cast<int>(addr[2]) << " "
-        << static_cast<int>(addr[1]) << " "
-        << static_cast<int>(addr[0]));
+
+    LOG_DEBUG("device MAC address: " << ss.str());
 }
 
 /**
@@ -259,4 +312,54 @@ void BleProcess::onAdvertisingStart(const ble::AdvertisingStartEvent& event)
 void BleProcess::onAdvertisingEnd(const ble::AdvertisingEndEvent& event)
 {
     LOG_INFO("BLE advertising ends for reason " << static_cast<int>(event.getCompleted_events()) << " with status " << event.getStatus());
+}
+
+/** Respond to a pairing request. This will be called by the stack
+    * when a pairing request arrives and expects the application to
+    * call acceptPairingRequest or cancelPairingRequest */
+void BleProcess::pairingRequest(ble::connection_handle_t connectionHandle)
+{
+    LOG_INFO("Pairing requested - authorising");
+    _ble_interface.securityManager().acceptPairingRequest(connectionHandle);
+}
+
+/** Inform the application of pairing */
+void BleProcess::pairingResult(ble::connection_handle_t connectionHandle, SecurityManager::SecurityCompletionStatus_t result)
+{
+    if (result == SecurityManager::SEC_STATUS_SUCCESS)
+    {
+        LOG_INFO("Pairing successful");
+        _bonded = true;
+    } 
+    else
+    {
+        LOG_ERROR("Pairing failed");
+    }
+
+    _event_queue.call_in(_delay, [this, connectionHandle] { _ble_interface.gap().disconnect(connectionHandle, ble::local_disconnection_reason_t::USER_TERMINATION); });
+}
+
+/** Inform the application of change in encryption status. This will be
+    * communicated through the serial port */
+void BleProcess::linkEncryptionResult(ble::connection_handle_t  /*connectionHandle*/, ble::link_encryption_t result)
+{
+    if (result == ble::link_encryption_t::ENCRYPTED)
+    {
+        LOG_INFO("Link ENCRYPTED");
+    }
+    else if (result == ble::link_encryption_t::ENCRYPTED_WITH_MITM)
+    {
+        LOG_INFO("Link ENCRYPTED_WITH_MITM");
+    }
+    else if (result == ble::link_encryption_t::NOT_ENCRYPTED)
+    {
+        LOG_INFO("Link NOT_ENCRYPTED");
+    }
+}
+
+void BleProcess::onPrivacyEnabled()
+{
+    /* all initialisation complete, start our main activity */
+    LOG_INFO("Privacy enabled");
+    configureAdvertising();
 }
