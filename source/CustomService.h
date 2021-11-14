@@ -21,10 +21,10 @@ private:
     events::EventQueue& _eventQueue;     // event queue of the main thread
     BLE& _bleInterface;                  // interface to BLE device
     static constexpr size_t UserDataSize = 7;
-    WriteOnlyArrayGattCharacteristic<uint8_t, UserDataSize>* _writable_characteristic = nullptr;
-    uint8_t _characteristicValue[UserDataSize]{1,2,3,4,5,6,7};    //NOLINT(hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-c-arrays)
+    ReadWriteGattCharacteristic<uint8_t>* _writable_characteristic{nullptr};
+    uint8_t _characteristicValue{1};    //NOLINT(hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-c-arrays)
     constexpr static uint16_t CustomServiceUUID = 0xA000;
-    constexpr static uint16_t WritableCharacteristicUUID = 0xA002;
+    constexpr static uint16_t WritableCharacteristicUUID = 0xA001;
 };
 
 #endif /* CUSTOM_SERVICE_H_ */

@@ -1,5 +1,6 @@
 #include "Logger.h"
 #include "BleProcess.h"
+#include "CustomService.h"
 #include "ble/BLE.h"
 #include "mbed.h"
 #include <iostream>
@@ -20,11 +21,11 @@ int main()
     //construct BLE process
     BleProcess bleProcess(eventQueue);
 
+    //construct GATT custom service object
+    CustomService customService(eventQueue, bleProcess.getBleInterface());
+
     //assign BLE on init callback function
-    bleProcess.setOnInitCbk(callback([]()
-    {
-        LOG_INFO("executing on init callback");
-    }));
+    bleProcess.setOnInitCbk(callback(&customService, &CustomService::start));
 
     // bind the event queue to the ble interface, initialize the interface and start advertising
     bleProcess.start();

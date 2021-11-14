@@ -23,8 +23,9 @@ public:
     bool start();
     void stop();
     void setOnInitCbk(mbed::Callback<void()> cb);
+    BLE& getBleInterface() const { return _ble_interface; }
 private:
-    void scheduleBleEvents(BLE::OnEventsToProcessCallbackContext* event);
+    void scheduleBleEvents(BLE::OnEventsToProcessCallbackContext* context);
     void whenInitComplete(BLE::InitializationCompleteCallbackContext* event);
     bool setAdvertisingParameters();
     bool setAdvertisingData();
@@ -38,5 +39,9 @@ private:
     BLE& _ble_interface;
     mbed::Callback<void()> _post_init_cb{nullptr};
     ble::AdvertisingDataSimpleBuilder<ble::LEGACY_ADVERTISING_MAX_SIZE> _dataBuilder;
+    const UUID CustomServiceUUID = 0xA000;
+    const UUID WritableCharacteristicUUID = 0xA001;
+    uint8_t myCharacteristicValue{0};
+    ReadWriteGattCharacteristic<uint8_t>* _pMyCharacteristic{nullptr};
 };
 #endif /* BLE_PROCESS_H_ */

@@ -42,8 +42,10 @@ bool BleProcess::start()
         return false;
     }
 
+    //assign BLE events process callback
     _ble_interface.onEventsToProcess(makeFunctionPointer(this, &BleProcess::scheduleBleEvents));
 
+    //initialize BLE interface with on_complete callback
     ble_error_t error = _ble_interface.init(this, &BleProcess::whenInitComplete);
 
     if (error != BLE_ERROR_NONE)
@@ -110,7 +112,7 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
     if (!startAdvertising())
     {
         return;
-    }    
+    }
 
     if (_post_init_cb)
     {
@@ -150,7 +152,7 @@ bool BleProcess::setAdvertisingData()
 {
     Gap &gap = _ble_interface.gap();
 
-    UUID services[]{GattService::UUID_HUMAN_INTERFACE_DEVICE_SERVICE, GattService::UUID_BATTERY_SERVICE};  //NOLINT(hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-c-arrays)
+    UUID services[]{GattService::UUID_BATTERY_SERVICE};  //NOLINT(hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-c-arrays)
 
     //Use the simple builder to construct the payload
     _dataBuilder
