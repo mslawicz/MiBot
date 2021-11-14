@@ -1,4 +1,5 @@
 #include "CustomService.h"
+#include <cstdlib>
 
 CustomService::CustomService(events::EventQueue& eventQueue, BLE& bleInterface) :
     _eventQueue(eventQueue),
@@ -34,6 +35,16 @@ void CustomService::start()
         // set security mode
         //characteristics[index]->setWriteSecurityRequirement(GattCharacteristic::SecurityRequirement_t::SC_AUTHENTICATED);   //NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
     }
+
+    //add battery service to GATT server
+    _pBatteryService = new BatteryService(_bleInterface);   //NOLINTerror = _bleInterface.gattServer().addService(dataService);
+
+    //XXX battery level test
+    _eventQueue.call_every(1s, [this]()
+    {
+        _batteryLevel = 50U +rand() % 10U;
+        _pBatteryService->updateBatteryLevel(_batteryLevel);
+    });
 
     //dispatch GATT events in this object
     _bleInterface.gattServer().setEventHandler(this);

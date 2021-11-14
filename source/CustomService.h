@@ -5,6 +5,7 @@
 #include "Logger.h"
 #include <mbed.h>
 #include "ble/BLE.h"
+#include "ble/services/BatteryService.h"
 
 class CustomService : ble::GattServer::EventHandler
 {
@@ -25,6 +26,8 @@ private:
     uint8_t _characteristicValue{1};    //NOLINT(hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-c-arrays)
     constexpr static uint16_t CustomServiceUUID = 0xA000;
     constexpr static uint16_t WritableCharacteristicUUID = 0xA001;
+    uint8_t _batteryLevel{0};
+    BatteryService* _pBatteryService{nullptr};
 };
 
 #endif /* CUSTOM_SERVICE_H_ */

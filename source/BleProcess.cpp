@@ -1,7 +1,7 @@
 #include "Logger.h"
 #include <BleProcess.h>
 #include "ble/FunctionPointerWithContext.h"
-#include <GattServer.h>
+//#include <GattServer.h>
 #include <algorithm>
 #include <iomanip>
 
@@ -132,8 +132,8 @@ bool BleProcess::setAdvertisingParameters()
     static const ble::AdvertisingParameters advertisingParams
     (
         ble::advertising_type_t::CONNECTABLE_UNDIRECTED,
-        ble::adv_interval_t(ble::millisecond_t(50)),        //minimum interval in ms
-        ble::adv_interval_t(ble::millisecond_t(100))        //maximum interval in ms
+        ble::adv_interval_t(ble::millisecond_t(100)),       //minimum interval in ms
+        ble::adv_interval_t(ble::millisecond_t(200))        //maximum interval in ms
     );
 
     ble_error_t error = gap.setAdvertisingParameters(ble::LEGACY_ADVERTISING_HANDLE, advertisingParams);
@@ -152,14 +152,14 @@ bool BleProcess::setAdvertisingData()
 {
     Gap &gap = _ble_interface.gap();
 
-    UUID services[]{GattService::UUID_BATTERY_SERVICE};  //NOLINT(hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-c-arrays)
+    //XXX UUID services[]{GattService::UUID_BATTERY_SERVICE};  //NOLINT(hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-c-arrays)
 
     //Use the simple builder to construct the payload
     _dataBuilder
     .setFlags()
-    .setName("MiBot")
-    .setLocalServiceList({static_cast<UUID*>(services), sizeof(services) / sizeof(services[0])})
-    .setAppearance(ble::adv_data_appearance_t::HUMAN_INTERFACE_DEVICE_HID);
+    .setName("MiBot");
+    //XXX.setLocalServiceList({static_cast<UUID*>(services), sizeof(services) / sizeof(services[0])})
+    //XXX.setAppearance(ble::adv_data_appearance_t::);
 
     ble_error_t error = gap.setAdvertisingPayload(ble::LEGACY_ADVERTISING_HANDLE, _dataBuilder.getAdvertisingData());
 
