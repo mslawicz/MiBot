@@ -11,7 +11,7 @@
  * Setup advertising payload and manage advertising state.
  * Delegate to GattClientProcess once the connection is established.
  */
-class BleProcess : private mbed::NonCopyable<BleProcess>, public ble::Gap::EventHandler, public SecurityManager::EventHandler
+class BleProcess : private mbed::NonCopyable<BleProcess>, public ble::Gap::EventHandler, public SecurityManager::EventHandler   //NOLINT(fuchsia-multiple-inheritance)
 {
 public:
     explicit BleProcess(events::EventQueue& event_queue);
@@ -48,8 +48,5 @@ private:
     const UUID WritableCharacteristicUUID = 0xA001;
     uint8_t myCharacteristicValue{0};
     ReadWriteGattCharacteristic<uint8_t>* _pMyCharacteristic{nullptr};
-    bool _bonded{false};
-    /* Delay between steps */
-    static constexpr std::chrono::milliseconds _delay{3000ms};
 };
 #endif /* BLE_PROCESS_H_ */

@@ -1,7 +1,6 @@
 #include "Logger.h"
-#include <BleProcess.h>
 #include "ble/FunctionPointerWithContext.h"
-//#include <GattServer.h>
+#include <BleProcess.h>
 #include <algorithm>
 #include <iomanip>
 #include <sstream>
@@ -270,7 +269,7 @@ void BleProcess::onDisconnectionComplete(const ble::DisconnectionCompleteEvent& 
     startAdvertising();
 }
 
-void BleProcess::printMacAddress(const uint8_t* pAddr)
+void BleProcess::printMacAddress(const uint8_t* pAddr)  //NOLINT(readability-convert-member-functions-to-static)
 {
     stringstream ss;
     constexpr uint8_t NoOfBytes = 6;
@@ -324,19 +323,16 @@ void BleProcess::pairingRequest(ble::connection_handle_t connectionHandle)
 }
 
 /** Inform the application of pairing */
-void BleProcess::pairingResult(ble::connection_handle_t connectionHandle, SecurityManager::SecurityCompletionStatus_t result)
+void BleProcess::pairingResult(ble::connection_handle_t  /*connectionHandle*/, SecurityManager::SecurityCompletionStatus_t result)
 {
     if (result == SecurityManager::SEC_STATUS_SUCCESS)
     {
         LOG_INFO("Pairing successful");
-        _bonded = true;
     } 
     else
     {
         LOG_ERROR("Pairing failed");
     }
-
-    _event_queue.call_in(_delay, [this, connectionHandle] { _ble_interface.gap().disconnect(connectionHandle, ble::local_disconnection_reason_t::USER_TERMINATION); });
 }
 
 /** Inform the application of change in encryption status. This will be
@@ -361,5 +357,14 @@ void BleProcess::onPrivacyEnabled()
 {
     /* all initialisation complete, start our main activity */
     LOG_INFO("Privacy enabled");
+
+    ble::peripheral_privacy_configuration_t privacy_configuration =
+    {
+        /* use_non_resolvable_random_address */ false,
+        ble::peripheral_privacy_configuration_t::PERFORM_PAIRING_PROCEDURE
+    };
+
+    _ble_interface.gap().setPeripheralPrivacyConfiguration(&privacy_configuration);    
+
     configureAdvertising();
 }
