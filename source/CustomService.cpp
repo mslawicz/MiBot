@@ -5,8 +5,8 @@ CustomService::CustomService(events::EventQueue& eventQueue, BLE& bleInterface) 
     _eventQueue(eventQueue),
     _bleInterface(bleInterface)
 {
-    _writable_characteristic = new ReadWriteGattCharacteristic<uint8_t>(WritableCharacteristicUUID, &_characteristicValue);   //NOLINT (cppcoreguidelines-owning-memory)
-    if(_writable_characteristic == nullptr)
+    _pWritableCharacteristic = new ReadWriteArrayGattCharacteristic<uint8_t, UserDataSize>(WritableCharacteristicUUID, _characteristicValue);   //NOLINT (cppcoreguidelines-owning-memory)
+    if(_pWritableCharacteristic == nullptr)
     {
         LOG_ERROR("Allocation of ReadWriteGattCharacteristic failed");
     }
@@ -16,7 +16,7 @@ void CustomService::start()
 {
     LOG_INFO("GATT custom service start");
     //create array of all used characteristics
-    GattCharacteristic* characteristics[] = { _writable_characteristic }; //NOLINT(hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-c-arrays)
+    GattCharacteristic* characteristics[] = { _pWritableCharacteristic }; //NOLINT(hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-c-arrays)
     auto numberOfCharacteristics = sizeof(characteristics) / sizeof(characteristics[0]);
     //create service with the list of characteristics
     GattService dataService(CustomServiceUUID, static_cast<GattCharacteristic**>(characteristics), numberOfCharacteristics);
@@ -55,7 +55,7 @@ void CustomService::start()
 */
 void CustomService::onDataWritten(const GattWriteCallbackParams& params)
 {
-    if(params.handle == _writable_characteristic->getValueHandle())
+    if(params.handle == _pWritableCharacteristic->getValueHandle())
     {
         LOG_DEBUG("Received data length " << params.len << " with the first byte " << static_cast<int>(*(params.data)));
     }
