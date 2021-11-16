@@ -1,11 +1,13 @@
 #include "CustomService.h"
 #include <cstdlib>
+#include <iomanip>
+#include <sstream>
 
 CustomService::CustomService(events::EventQueue& eventQueue, BLE& bleInterface) :
     _eventQueue(eventQueue),
     _bleInterface(bleInterface)
 {
-    _pWritableCharacteristic = new ReadWriteArrayGattCharacteristic<uint8_t, UserDataSize>(WritableCharacteristicUUID, _characteristicValue);   //NOLINT (cppcoreguidelines-owning-memory)
+    _pWritableCharacteristic = new WriteOnlyArrayGattCharacteristic<uint8_t, UserDataSize>(WritableCharacteristicUUID, _characteristicValue);   //NOLINT (cppcoreguidelines-owning-memory)
     if(_pWritableCharacteristic == nullptr)
     {
         LOG_ERROR("Allocation of ReadWriteGattCharacteristic failed");
@@ -57,7 +59,16 @@ void CustomService::onDataWritten(const GattWriteCallbackParams& params)
 {
     if(params.handle == _pWritableCharacteristic->getValueHandle())
     {
-        LOG_DEBUG("Received data length " << params.len << " with the first byte " << static_cast<int>(*(params.data)));
+        stringstream ss;
+        for(size_t i=0; i<params.len; i++)  //NOLINT(cppcoreguidelines-pro-type-union-access)
+        {
+            ss << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(params.data[i]);    //NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+            if(i < params.len - 1)  //NOLINT(cppcoreguidelines-pro-type-union-access)
+            {
+                ss << ":"; 
+            }
+        }
+        LOG_DEBUG("Received data " << ss.str());
     }
     else
     {

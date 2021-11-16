@@ -21,11 +21,11 @@ private:
     void onConfirmationReceived(const GattConfirmationReceivedCallbackParams & /*params*/) override { LOG_DEBUG("!!! onConfirmationReceived"); }
     events::EventQueue& _eventQueue;     // event queue of the main thread
     BLE& _bleInterface;                  // interface to BLE device
-    static constexpr size_t UserDataSize = 7;
-    ReadWriteArrayGattCharacteristic<uint8_t, UserDataSize>* _pWritableCharacteristic{nullptr};
+    static constexpr size_t UserDataSize = 4;
+    WriteOnlyArrayGattCharacteristic<uint8_t, UserDataSize>* _pWritableCharacteristic{nullptr};
     uint8_t _characteristicValue[UserDataSize]{0};    //NOLINT(hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-c-arrays)
-    constexpr static uint16_t CustomServiceUUID = 0xA000;
-    constexpr static uint16_t WritableCharacteristicUUID = 0xA001;
+    const char* CustomServiceUUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"; // Nordic UART Service 
+    const char* WritableCharacteristicUUID = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";    // write characteristic
     uint8_t _batteryLevel{0};
     BatteryService* _pBatteryService{nullptr};
 };

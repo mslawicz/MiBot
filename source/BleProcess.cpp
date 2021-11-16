@@ -273,10 +273,9 @@ void BleProcess::printMacAddress(const uint8_t* pAddr)  //NOLINT(readability-con
 {
     stringstream ss;
     constexpr uint8_t NoOfBytes = 6;
-    ss << std::hex << std::setfill('0') << std::setw(2);
     for(uint8_t byte=0; byte<NoOfBytes; byte++)
     {
-        ss << static_cast<int>(pAddr[0]);    //NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        ss << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(pAddr[byte]);    //NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         if(byte < NoOfBytes - 1)
         {
             ss << ":";
