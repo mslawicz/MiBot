@@ -18,7 +18,7 @@ int main()
     // main event queue
     events::EventQueue eventQueue;
 
-    //construct BLE process
+    //construct BLE process (GAP)
     BleProcess bleProcess(eventQueue);
 
     //construct GATT custom service object
@@ -27,10 +27,10 @@ int main()
     //assign BLE on init callback function
     bleProcess.setOnInitCbk(callback(&customService, &CustomService::start));
 
-    // bind the event queue to the ble interface, initialize the interface and start advertising
+    //initialize the interface and start advertising
     bleProcess.start();
 
-    // process the event queue
+    //process the event queue
     eventQueue.dispatch_forever();
 
     // this should never be reached
